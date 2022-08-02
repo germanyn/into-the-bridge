@@ -7,7 +7,9 @@ import { Unit } from "./Unit"
 export class Board extends Phaser.GameObjects.Group {
 
   floors: Floor[][]
+  floorGroup: Phaser.GameObjects.Group
   unities: IsometricSprite[] = []
+  unitiesGroup: Phaser.GameObjects.Group
 
   constructor(scene: MainScene) {
     super(scene)
@@ -20,6 +22,12 @@ export class Board extends Phaser.GameObjects.Group {
         return tile
       })
     })
+    this.floorGroup = scene.add.group(this.floors.flatMap(row => row))
+    this.unitiesGroup = scene.add.group()
+    this.scene.input.on(Phaser.Input.Events.GAMEOBJECT_POINTER_DOWN, (_: never, objects: Phaser.GameObjects.Sprite[]) => {
+      if (objects.some(object => object instanceof Floor)) return
+      this.scene.events.emit('deselect-all')
+    })
   }
 
   addUnit(unit: Unit) {
@@ -29,6 +37,7 @@ export class Board extends Phaser.GameObjects.Group {
     const floor = this.floors.at(unit.gridX)?.at(unit.gridY)
     if (!floor) throw new Error("There's no floor for this unit")
     floor.addUnit(unit)
+    this.unitiesGroup.add(unit)
   }
 
   centerSprite(sprite: Phaser.GameObjects.Sprite) {

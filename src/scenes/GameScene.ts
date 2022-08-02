@@ -5,6 +5,8 @@ import { Pillar } from '../objs/Pillar';
 import { OutlinePipeline } from '../objs/shaders/OutlinePipeline';
 import { Unit } from '../objs/Unit';
 
+export const GAME_SCENE_KEY = 'GameScene'
+
 export default class MainScene extends Phaser.Scene {
   objsData = [
     [1,0,0,0,0,0],
@@ -16,7 +18,7 @@ export default class MainScene extends Phaser.Scene {
   ]
   map!: Board
   constructor() {
-    super('GameScene');
+    super(GAME_SCENE_KEY);
   }
 
   init() {

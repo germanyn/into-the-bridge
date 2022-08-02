@@ -6,33 +6,36 @@ import { Unit } from "../Unit";
 export const FLOOR_SPRITE = 'floor'
 
 export class Floor extends IsometricSprite {
+  declare scene: MainScene
   unit?: Unit
   selected = false
+  name = 'Floor'
+  description = 'A basic tile'
   constructor(scene: MainScene, x: number, y: number) {
     super(FLOOR_SPRITE, {
       scene,
       x,
       y,
     })
-    this.on('pointerdown', () => {
-      this.toggle()
+    this.on(Phaser.Input.Events.POINTER_DOWN, () => {
+      this.select()
     })
-    this.on('pointerover', () => {
+    this.on(Phaser.Input.Events.POINTER_OVER, () => {
       this.setAlpha(0.5)
     })
-    this.on('pointerout', () => {
+    this.on(Phaser.Input.Events.POINTER_OUT, () => {
       this.setAlpha(1)
+    })
+    this.scene.events.addListener('deselect-all', () => {
+      this.deselect()
     })
     this.setInteractive()
   }
 
-  toggle() {
-    this.selected
-      ? this.deselect()
-      : this.select()
-  }
-
   select() {
+    if (this.selected) return
+    this.scene.events.emit('deselect-all')
+    this.scene.events.emit('select-tile', this)
     this.selected = true
     this.setPipeline(OutlinePipeline.KEY)
     this.pipeline.set2f(
@@ -43,6 +46,7 @@ export class Floor extends IsometricSprite {
   }
 
   deselect() {
+    if (!this.selected) return
     this.selected = false
     this.resetPipeline()
   }
