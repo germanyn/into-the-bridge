@@ -1,5 +1,5 @@
 import { BOARD_SIZE, TILE_HEIGHT, TILE_WIDTH } from "../constants"
-import MainScene from "../scenes/Game"
+import MainScene from "../scenes/GameScene"
 import { Floor } from "./tiles/Floor"
 import { IsometricSprite } from "./IsometricSprite"
 import { Unit } from "./Unit"

@@ -1,4 +1,4 @@
-import MainScene from "../../scenes/Game";
+import MainScene from "../../scenes/GameScene";
 import { OutlinePipeline } from "../shaders/OutlinePipeline"
 import { IsometricSprite } from "../IsometricSprite";
 import { Unit } from "../Unit";
