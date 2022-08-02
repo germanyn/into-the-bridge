@@ -1,4 +1,4 @@
-import { SpriteParams, IsometricSprite } from "./IsometricSprite"
+import { SpriteParams } from "./IsometricSprite"
 import { Unit } from "./Unit"
 
 export const HERO_SPRITE = 'hero'

@@ -1,4 +1,5 @@
 import { CENTER_X, CENTER_Y, TILE_HHEIGHT, TILE_HWIDTH } from "../constants"
+import MainScene from "../scenes/GameScene"
 
 export type SpriteParams = {
   scene: Phaser.Scene
@@ -16,6 +17,7 @@ export type UnitParams = {
 export type ControllerType = 'none' | 'player' | 'enemy'
 
 export abstract class IsometricSprite extends Phaser.GameObjects.Sprite {
+  declare scene: MainScene
   offsetX: number
   offsetY: number
   gridX: number
@@ -36,6 +38,5 @@ export abstract class IsometricSprite extends Phaser.GameObjects.Sprite {
     this.gridX = x
     this.gridY = y
     this.scene.add.existing(this)
-    this.depth = CENTER_Y + ty
   }
 }
