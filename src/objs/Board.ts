@@ -1,26 +1,38 @@
-import { BOARD_SIZE } from "../constants"
+import { BOARD_SIZE, TILE_HEIGHT, TILE_WIDTH } from "../constants"
 import MainScene from "../scenes/Game"
 import { Floor } from "./tiles/Floor"
 import { IsometricSprite } from "./IsometricSprite"
 import { Unit } from "./Unit"
 
-export class Board {
+export class Board extends Phaser.GameObjects.Group {
 
   floors: Floor[][]
   unities: IsometricSprite[] = []
 
   constructor(scene: MainScene) {
+    super(scene)
     this.floors = Array.from(Array(BOARD_SIZE), (_, x) => {
       return Array.from(Array(BOARD_SIZE), (_, y) => {
         const tile = new Floor(scene, x, y)
         tile.setInteractive()
+        this.add(tile)
+        this.centerSprite(tile)
         return tile
       })
     })
   }
 
   addUnit(unit: Unit) {
+    this.add(unit)
+    this.centerSprite(unit)
     this.unities.push(unit)
-    this.floors[unit.gridX][unit.gridY].unit = unit
+    const floor = this.floors.at(unit.gridX)?.at(unit.gridY)
+    if (!floor) throw new Error("There's no floor for this unit")
+    floor.addUnit(unit)
+  }
+
+  centerSprite(sprite: Phaser.GameObjects.Sprite) {
+    sprite.setX(sprite.x + (this.scene.renderer.width - BOARD_SIZE * TILE_WIDTH) / 2)
+    sprite.setY(sprite.y + (this.scene.renderer.height - BOARD_SIZE * TILE_HEIGHT) / 2)
   }
 }

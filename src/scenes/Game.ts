@@ -6,6 +6,7 @@ import { OutlinePipeline } from '../objs/shaders/OutlinePipeline';
 import { Floor } from '../objs/tiles/Floor';
 import { IsometricSprite } from '../objs/IsometricSprite';
 import { Unit } from '../objs/Unit';
+import { BOARD_SIZE, TILE_HEIGHT, TILE_WIDTH } from '../constants';
 
 export default class MainScene extends Phaser.Scene {
   objsData = [
@@ -42,6 +43,7 @@ export default class MainScene extends Phaser.Scene {
 
   renderScene() {
     this.map = new Board(this)
+    this.add.existing(this.map)
     this.objsData.forEach((row, x) => {
       row.forEach((cell, y) => {
         if (!cell) return

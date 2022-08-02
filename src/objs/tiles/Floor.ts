@@ -43,8 +43,11 @@ export class Floor extends IsometricSprite {
   }
 
   deselect() {
-    console.log('deselect')
     this.selected = false
     this.resetPipeline()
+  }
+
+  addUnit(unit: Unit) {
+    this.unit = unit
   }
 }
