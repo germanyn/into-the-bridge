@@ -90,7 +90,7 @@ export abstract class Unit extends IsometricSprite {
         onComplete: () => {
           this.depth = toTile.depth + 1
         },
-        duration: 125,
+        duration: 200,
       })
       previousTile = toTile
     }
