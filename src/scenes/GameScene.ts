@@ -10,7 +10,7 @@ import { Unit } from '../objs/Unit';
 export const GAME_SCENE_KEY = 'GameScene'
 
 export default class MainScene extends Phaser.Scene {
-  map!: Board
+  board!: Board
   selectedUnit?: Unit
   constructor() {
     super(GAME_SCENE_KEY);
@@ -39,8 +39,8 @@ export default class MainScene extends Phaser.Scene {
     this.events.addListener('deselect-all', (tile: Tile) => {
       this.selectedUnit = undefined
     })
-    this.map = new Board(this)
-    this.add.existing(this.map)
+    this.board = new Board(this)
+    this.add.existing(this.board)
     const unities = [
       new Hero({
         scene: this,
@@ -58,7 +58,7 @@ export default class MainScene extends Phaser.Scene {
         y: 4,
       }),
     ]
-    unities.forEach(unit => this.map.addUnit(unit))
+    unities.forEach(unit => this.board.addUnit(unit))
   }
 
   get centerX(): number {

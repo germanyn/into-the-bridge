@@ -51,7 +51,7 @@ export abstract class Unit extends IsometricSprite {
     for (let x = this.gridX - maxDistance; x < this.gridX + maxDistance + 1; ++x) {
       for (let y = this.gridY - maxDistance; y < this.gridY + maxDistance + 1; ++y) {
         if (x < 0 || x > BOARD_SIZE - 1 || y < 0 || y > BOARD_SIZE - 1) continue
-        const tile = this.scene.map.floors[x]?.[y]
+        const tile = this.scene.board.floors[x]?.[y]
         if (!tile) continue
         if (!tile.canBeOcupied(this)) continue
         const path = pathFinding.findPath([this.gridX, this.gridY], [x, y])
@@ -65,16 +65,16 @@ export abstract class Unit extends IsometricSprite {
 
   moveTo(tile: Tile): boolean {
     const path = this.paths.find(path => {
-      return this.scene.map.getPathTile(path) === tile
+      return this.scene.board.getPathTile(path) === tile
     })
     if (!path) return false
     this.scene.events.emit('deselect-all')
     const timeline = this.scene.tweens.createTimeline()
     const [firstNode, ...otherNodes] = path
-    let previousTile = this.scene.map.floors[firstNode.x][firstNode.y]
+    let previousTile = this.scene.board.floors[firstNode.x][firstNode.y]
     for (const node of otherNodes) {
       const currentTile = previousTile
-      const toTile = this.scene.map.floors[node.x][node.y]
+      const toTile = this.scene.board.floors[node.x][node.y]
       const animationPath = new Phaser.Curves.Path(this.x, this.y)
       const [newX, newY] = this.scene.calculateTilePosition(node.coordinates)
       animationPath.lineTo(newX + this.offsetX, newY + this.offsetY)
@@ -105,7 +105,7 @@ export abstract class Unit extends IsometricSprite {
 
   get pathFinding() {
     const pathFinding = new PathFinding(BOARD_SIZE, BOARD_SIZE)
-    this.scene.map.floors.forEach((row, x) => {
+    this.scene.board.floors.forEach((row, x) => {
       row.forEach((tile, y) => {
         pathFinding.grid[x][y].isWalkable = tile.isWalkableBy(this)
       })
@@ -113,7 +113,7 @@ export abstract class Unit extends IsometricSprite {
     return pathFinding
   }
   get currentTile() {
-    return this.scene.map.floors
+    return this.scene.board.floors
       .flatMap(row => row)
       .find(tile => tile?.unit === this)
   }
