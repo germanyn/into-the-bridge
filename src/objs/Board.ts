@@ -34,10 +34,6 @@ export class Board extends Phaser.GameObjects.Group {
     this.scene.events.addListener('select-tile', (tile: Tile) => {
       this.paintMoves(tile)
     })
-    scene.physics.add.overlap(this.unitiesGroup, this.floorGroup, (data1, data2) => {
-      console.log(data1)
-      console.log(data2)
-    })
   }
 
   addUnit(unit: Unit) {
