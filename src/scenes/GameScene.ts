@@ -10,14 +10,6 @@ import { Unit } from '../objs/Unit';
 export const GAME_SCENE_KEY = 'GameScene'
 
 export default class MainScene extends Phaser.Scene {
-  objsData = [
-    [1,0,0,0,0,0],
-    [0,0,0,0,0,0],
-    [0,2,0,1,2,0],
-    [0,0,0,1,0,0],
-    [0,0,0,0,0,0],
-    [2,0,0,0,0,0],
-  ]
   map!: Board
   selectedUnit?: Unit
   constructor() {
@@ -40,7 +32,6 @@ export default class MainScene extends Phaser.Scene {
   }
 
   create() {
-    this.renderScene()
     this.events.addListener('select-tile', (tile: Tile) => {
       if (!tile.unit) return
       this.selectedUnit = tile.unit
@@ -48,37 +39,26 @@ export default class MainScene extends Phaser.Scene {
     this.events.addListener('deselect-all', (tile: Tile) => {
       this.selectedUnit = undefined
     })
-  }
-
-  renderScene() {
     this.map = new Board(this)
     this.add.existing(this.map)
-    this.objsData.forEach((row, x) => {
-      row.forEach((cell, y) => {
-        if (!cell) return
-        let unit: Unit
-        switch (cell) {
-          case 1:
-            const hero = new Hero({
-              scene: this,
-              x,
-              y,
-            })
-            unit = hero
-            break;
-          case 2:
-            unit = new Pillar({
-              scene: this,
-              x,
-              y,
-            })
-            break;
-        
-          default: throw new Error(`No sprite for ${cell}`)
-        }
-        this.map.addUnit(unit)
-      })
-    })
+    const unities = [
+      new Hero({
+        scene: this,
+        x: 1,
+        y: 2,
+      }),
+      new Pillar({
+        scene: this,
+        x: 3,
+        y: 2,
+      }),
+      new Pillar({
+        scene: this,
+        x: 5,
+        y: 4,
+      }),
+    ]
+    unities.forEach(unit => this.map.addUnit(unit))
   }
 
   get centerX(): number {
