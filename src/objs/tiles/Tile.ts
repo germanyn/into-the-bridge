@@ -29,16 +29,16 @@ export abstract class Tile extends IsometricSprite {
     })
     this.setInteractive()
     // if ((this.gridX % 2) || (this.gridY % 2)) return
-    this.scene.add.text(this.x - this.width /2, this.y - this.height/2, `${this.depth}`, {
-      fontSize: '10px'
-    }).setDepth(700000)
+    // this.scene.add.text(this.x - this.width /2, this.y - this.height/2, `${this.depth}`, {
+    //   fontSize: '10px'
+    // }).setDepth(700000)
   }
 
   select() {
     if (this.selected) return
     if (this.scene.selectedUnit) {
-      this.scene.selectedUnit.moveTo(this)
-      return
+      const moved = this.scene.selectedUnit.moveTo(this)
+      if (moved) return
     }
     if (this.unit) this.unit.select()
     this.scene.events.emit('deselect-all')
