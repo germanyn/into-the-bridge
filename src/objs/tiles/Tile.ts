@@ -5,6 +5,7 @@ import { Unit } from "../Unit";
 export abstract class Tile extends IsometricSprite {
   unit?: Unit
   selected = false
+  canHaveUnit = true
   abstract name: string
   abstract description: string
   constructor(texture: string, scene: MainScene, x: number, y: number) {
@@ -23,13 +24,22 @@ export abstract class Tile extends IsometricSprite {
       this.setAlpha(1)
     })
     this.scene.events.addListener('deselect-all', () => {
+      this.clearTint()
       this.deselect()
     })
     this.setInteractive()
+    // if ((this.gridX % 2) || (this.gridY % 2)) return
+    this.scene.add.text(this.x - this.width /2, this.y - this.height/2, `${this.depth}`, {
+      fontSize: '10px'
+    }).setDepth(700000)
   }
 
   select() {
     if (this.selected) return
+    if (this.scene.selectedUnit) {
+      this.scene.selectedUnit.moveTo(this)
+      return
+    }
     if (this.unit) this.unit.select()
     this.scene.events.emit('deselect-all')
     this.scene.events.emit('select-tile', this)
@@ -46,5 +56,25 @@ export abstract class Tile extends IsometricSprite {
 
   addUnit(unit: Unit) {
     this.unit = unit
+    unit.gridX = this.gridX
+    unit.gridY = this.gridY
+  }
+
+  removeUnit() {
+    this.unit = undefined
+  }
+
+  isWalkableBy(unit: Unit) {
+    if (this.unit && this.unit.controller !== unit.controller) return false
+    return true
+  }
+
+  canBeOcupied(unit: Unit) {
+    if (this.unit) return false
+    return this.canHaveUnit
+  }
+
+  paintMovableSelect() {
+    this.setTint(0xff0000)
   }
 }

@@ -3,9 +3,13 @@ import MainScene from "../scenes/GameScene"
 import { Floor } from "./tiles/Floor"
 import { IsometricSprite } from "./IsometricSprite"
 import { Unit } from "./Unit"
+import { Tile } from "./tiles/Tile"
+import { PathFinding } from "./path-finding/PathFinding"
+import { PathNode } from "./path-finding/PathNode"
 
 export class Board extends Phaser.GameObjects.Group {
 
+  declare scene: MainScene
   floors: Floor[][]
   floorGroup: Phaser.GameObjects.Group
   unities: IsometricSprite[] = []
@@ -18,7 +22,6 @@ export class Board extends Phaser.GameObjects.Group {
         const tile = new Floor(scene, x, y)
         tile.setInteractive()
         this.add(tile)
-        this.centerSprite(tile)
         return tile
       })
     })
@@ -28,20 +31,35 @@ export class Board extends Phaser.GameObjects.Group {
       if (objects.some(object => object instanceof Floor)) return
       this.scene.events.emit('deselect-all')
     })
+    this.scene.events.addListener('select-tile', (tile: Tile) => {
+      this.paintMoves(tile)
+    })
+    scene.physics.add.overlap(this.unitiesGroup, this.floorGroup, (data1, data2) => {
+      console.log(data1)
+      console.log(data2)
+    })
   }
 
   addUnit(unit: Unit) {
     this.add(unit)
-    this.centerSprite(unit)
     this.unities.push(unit)
-    const floor = this.floors.at(unit.gridX)?.at(unit.gridY)
+    const floor = this.floors[unit.gridX]?.[unit.gridY]
     if (!floor) throw new Error("There's no floor for this unit")
     floor.addUnit(unit)
     this.unitiesGroup.add(unit)
   }
 
-  centerSprite(sprite: Phaser.GameObjects.Sprite) {
-    sprite.setX(sprite.x + (this.scene.renderer.width - BOARD_SIZE * TILE_WIDTH) / 2)
-    sprite.setY(sprite.y + (this.scene.renderer.height - BOARD_SIZE * TILE_HEIGHT) / 2)
+  paintMoves(tile: Tile) {
+    if (!tile.unit) return
+    tile.unit.paths.forEach(path => {
+      const tile = this.getPathTile(path)
+      tile?.paintMovableSelect()
+    })
+  }
+
+  getPathTile(path: PathNode[]): Tile | undefined {
+    const endNode = path.at(-1)
+    if (!endNode) return
+    return this.floors[endNode.x][endNode.y]
   }
 }

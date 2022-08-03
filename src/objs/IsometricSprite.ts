@@ -1,8 +1,8 @@
-import { CENTER_X, CENTER_Y, TILE_HHEIGHT, TILE_HWIDTH } from "../constants"
+import { BOARD_SIZE, CENTER_X, CENTER_Y, TILE_HHEIGHT, TILE_HWIDTH } from "../constants"
 import MainScene from "../scenes/GameScene"
 
 export type SpriteParams = {
-  scene: Phaser.Scene
+  scene: MainScene
   x: number
   y: number
   offsetX?: number
@@ -30,13 +30,43 @@ export abstract class IsometricSprite extends Phaser.GameObjects.Sprite {
     offsetX = 0,
     offsetY = 0,
   }: SpriteParams) {
-    const tx = (x - y) * TILE_HWIDTH + CENTER_X
-    const ty = (x + y) * TILE_HHEIGHT + CENTER_Y
+    const [tx, ty] = scene.calculateTilePosition([x, y])
     super(scene, tx + offsetX, ty + offsetY, textureName)
     this.offsetX = offsetX
     this.offsetY = offsetY
     this.gridX = x
     this.gridY = y
     this.scene.add.existing(this)
+    this.adjustDepth()
+  }
+
+  setGridX(gridX: number) {
+    this.setX(this.getXByGridX(gridX))
+  }
+
+  setGridY(gridY: number) {
+    this.setY(this.getYByGridY(gridY))
+  }
+
+  getXByGridX(gridX: number, {
+    x = this.x,
+    y = this.y,
+    offsetX = this.offsetX,
+  }: Partial<SpriteParams> = {}) {
+    const tx = (x - y) * TILE_HWIDTH + CENTER_X
+    return tx + offsetX
+  }
+
+  getYByGridY(gridY: number, {
+    x = this.x,
+    y = this.y,
+    offsetY = this.offsetY,
+  }: Partial<SpriteParams> = {}) {
+    const ty = (x + y) * TILE_HHEIGHT + CENTER_Y
+    return ty + offsetY
+  }
+
+  adjustDepth() {
+    this.depth = this.gridX + this.gridY * BOARD_SIZE
   }
 }

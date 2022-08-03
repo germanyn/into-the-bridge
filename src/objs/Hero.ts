@@ -19,5 +19,6 @@ export class Hero extends Unit {
         baseMovement: 3,
       },
     )
+    this.controller = 'player'
   }
 }

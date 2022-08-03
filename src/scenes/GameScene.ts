@@ -1,8 +1,10 @@
 import Phaser from 'phaser';
+import { BOARD_SIZE, CENTER_X, CENTER_Y, TILE_HEIGHT, TILE_HHEIGHT, TILE_HWIDTH, TILE_WIDTH } from '../constants';
 import { Board } from '../objs/Board';
 import { Hero } from '../objs/Hero';
 import { Pillar } from '../objs/Pillar';
 import { OutlinePipeline } from '../objs/shaders/OutlinePipeline';
+import { Tile } from '../objs/tiles/Tile';
 import { Unit } from '../objs/Unit';
 
 export const GAME_SCENE_KEY = 'GameScene'
@@ -11,12 +13,13 @@ export default class MainScene extends Phaser.Scene {
   objsData = [
     [1,0,0,0,0,0],
     [0,0,0,0,0,0],
+    [0,2,0,1,2,0],
     [0,0,0,1,0,0],
-    [0,0,0,0,0,0],
     [0,0,0,0,0,0],
     [2,0,0,0,0,0],
   ]
   map!: Board
+  selectedUnit?: Unit
   constructor() {
     super(GAME_SCENE_KEY);
   }
@@ -38,6 +41,13 @@ export default class MainScene extends Phaser.Scene {
 
   create() {
     this.renderScene()
+    this.events.addListener('select-tile', (tile: Tile) => {
+      if (!tile.unit) return
+      this.selectedUnit = tile.unit
+    })
+    this.events.addListener('deselect-all', (tile: Tile) => {
+      this.selectedUnit = undefined
+    })
   }
 
   renderScene() {
@@ -69,5 +79,19 @@ export default class MainScene extends Phaser.Scene {
         this.map.addUnit(unit)
       })
     })
+  }
+
+  get centerX(): number {
+    return (this.renderer.width - BOARD_SIZE * TILE_WIDTH) / 2
+  }
+
+  get centerY(): number {
+    return (this.renderer.height - BOARD_SIZE * TILE_HEIGHT) / 2
+  }
+
+  calculateTilePosition([gridX, gridY]: [number, number]): [number, number] {
+    const tx = (gridX - gridY) * TILE_HWIDTH + CENTER_X + this.centerX
+    const ty = (gridX + gridY) * TILE_HHEIGHT + CENTER_Y + this.centerY
+    return [tx, ty]
   }
 }
