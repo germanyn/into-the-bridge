@@ -6,5 +6,4 @@ import { UIScene } from './scenes/UIScene';
 new Phaser.Game({
   ...config,
   scene: [GameScene, UIScene],
-  pixelArt: true,
 });
