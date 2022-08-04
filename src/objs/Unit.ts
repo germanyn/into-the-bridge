@@ -1,6 +1,5 @@
 import { BOARD_SIZE } from "../constants"
 import { IsometricSprite, SpriteParams } from "./IsometricSprite"
-import { PathFinding } from "./path-finding/PathFinding"
 import { PathNode } from "./path-finding/PathNode"
 import { OutlinePipeline } from "./shaders/OutlinePipeline"
 import { Tile } from "./tiles/Tile"
@@ -20,7 +19,7 @@ export abstract class Unit extends IsometricSprite {
   controller: ControllerType = 'none'
   movedThisTurn = false
   attackedThisTurn = false
-  currentLife: number = 0
+  life: number = 0
   canBePushed = true
   weapons: Weapon[] = []
 
@@ -31,7 +30,7 @@ export abstract class Unit extends IsometricSprite {
     super(textureName, spriteParams)
     this.baseLife = baseLife
     this.baseMovement = baseMovement
-    this.currentLife = baseLife
+    this.life = baseLife
   }
   select() {
     if (this.selected) return
@@ -156,10 +155,10 @@ export abstract class Unit extends IsometricSprite {
   }
 
   hurt(damage: number) {
-    this.currentLife = damage >= this.currentLife
+    this.life = damage >= this.life
       ? 0
-      : this.currentLife - damage
-    if (!this.currentLife) this.die()
+      : this.life - damage
+    if (!this.life) this.die()
   }
   die() {
     this.scene.tweens.addCounter({
