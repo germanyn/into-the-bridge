@@ -15,6 +15,7 @@ export class Pillar extends Unit {
       baseLife: 2,
     })
     this.alpha = 0.80
+    this.name = 'Pillar'
   }
 
 }

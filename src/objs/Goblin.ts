@@ -15,11 +15,12 @@ export class Goblin extends Unit {
         offsetY: -14,
       },
       {
-        baseLife: 1,
+        baseLife: 2,
         baseMovement: 2,
       },
     )
     this.scale = 0.5
     this.controller = 'enemy'
+    this.name = 'Goblin'
   }
 }

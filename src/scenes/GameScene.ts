@@ -72,6 +72,11 @@ export default class MainScene extends Phaser.Scene {
         x: 1,
         y: 5,
       }),
+      new Pillar({
+        scene: this,
+        x: 1,
+        y: 6,
+      }),
     ]
     unities.forEach(unit => this.board.addUnit(unit))
   }

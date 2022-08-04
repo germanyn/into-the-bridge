@@ -4,6 +4,7 @@ import { PathFinding } from "./path-finding/PathFinding"
 import { PathNode } from "./path-finding/PathNode"
 import { OutlinePipeline } from "./shaders/OutlinePipeline"
 import { Tile } from "./tiles/Tile"
+import { Weapon } from "./weapons/Weapon"
 
 export type UnitParams = {
   baseLife?: number
@@ -18,7 +19,10 @@ export abstract class Unit extends IsometricSprite {
   baseMovement: number
   controller: ControllerType = 'none'
   movedThisTurn = false
+  attackedThisTurn = false
   currentLife: number = 0
+  canBePushed = true
+  weapons: Weapon[] = []
 
   constructor(textureName: string, spriteParams: SpriteParams, {
     baseLife = 0,
@@ -27,7 +31,6 @@ export abstract class Unit extends IsometricSprite {
     super(textureName, spriteParams)
     this.baseLife = baseLife
     this.baseMovement = baseMovement
-    this.adjustDepth()
     this.currentLife = baseLife
   }
   select() {
@@ -47,8 +50,16 @@ export abstract class Unit extends IsometricSprite {
     this.resetPipeline()
   }
 
+  get canMove() {
+    return !this.movedThisTurn
+  }
+
+  get canAttack() {
+    return !this.attackedThisTurn
+  }
+
   get paths() {
-    if (this.movedThisTurn === true) return []
+    if (!this.canMove) return []
     const maxDistance = this.baseMovement
     const pathFinding = this.pathFinding
     const paths: PathNode[][] = []
@@ -87,7 +98,6 @@ export abstract class Unit extends IsometricSprite {
         x: newX + this.offsetX,
         y: newY + this.offsetY,
         onStart: () => {
-          this.adjustDepth()
           if (!currentTile || toTile.depth < currentTile.depth ) return
           this.depth = toTile.depth +1
         },
@@ -124,13 +134,33 @@ export abstract class Unit extends IsometricSprite {
   }
   toggleAttack() {
     this.scene.events.emit('remove-tiles-paint')
+    if (!this.weapons.length) return
+    if (!this.currentTile) return
+
+    const [weapon] = this.weapons
+    const tiles = weapon.getTargetArea(this.currentTile)
+    if (!tiles.length) return false
+    tiles.forEach(tile => tile.paintAttackableTile())
     return false
   }
+
+  get attackTiles(): Tile[] {
+    if (!this.currentTile) return []
+    if (!this.canAttack) return []
+    return this.weapons[0].getTargetArea(this.currentTile)
+  }
+
   attackTile(tile: Tile): boolean {
     this.scene.attacking = false
     this.scene.events.emit('remove-tiles-paint')
-    return false
+    if (!this.attackTiles.some(attackTile => attackTile === tile)) return false
+    if (!tile.unit) return true
+    this.weapons[0].getSkillEffect(this, tile).forEach(effect => {
+      effect.apply()
+    });
+    return true
   }
+
   hurt(damage: number) {
     this.currentLife = damage >= this.currentLife
       ? 0
@@ -138,6 +168,47 @@ export abstract class Unit extends IsometricSprite {
     if (!this.currentLife) this.die()
   }
   die() {
-    this.destroy()
+    this.scene.tweens.addCounter({
+      from: 1,
+      to: 0,
+      duration: 300,
+      onUpdate: (tween) => {
+        this.setAlpha(tween.getValue())
+      },
+      onComplete: () => {
+        this.currentTile?.removeUnit()
+        this.destroy()
+      }
+    })
+  }
+  push(direction: Phaser.Math.Vector2) {
+    if (!this.currentTile) return
+    const { gridX, gridY } = this.currentTile
+    const toTile = this.scene.board.floors[gridX + direction.x]?.[gridY + direction.y]
+    if (!toTile) return
+    const oldPosition = new Phaser.Math.Vector2(this.x, this.y)
+    const [newX, newY] = this.scene.calculateTilePosition([toTile.gridX, toTile.gridY])
+    this.scene.tweens.add({
+      targets: this,
+      x: newX + this.offsetX,
+      y: newY + this.offsetY,
+      onStart: () => {
+        if (!this.currentTile || toTile.depth < this.currentTile.depth ) return
+        this.depth = toTile.depth +1
+      },
+      onComplete: () => {
+        if (toTile.unit) {
+          this.setX(oldPosition.x)
+          this.setY(oldPosition.y)
+          toTile.unit.hurt(1)
+          this.hurt(1)
+        } else {
+          this.depth = toTile.depth + 1
+          this.currentTile?.removeUnit()
+          toTile.addUnit(this)
+        }
+      },
+      duration: 250,
+    })
   }
 }
