@@ -8,7 +8,6 @@ import { PathFinding } from "./path-finding/PathFinding"
 import { PathNode } from "./path-finding/PathNode"
 
 export class Board extends Phaser.GameObjects.Group {
-
   declare scene: MainScene
   floors: Floor[][]
   floorGroup: Phaser.GameObjects.Group
@@ -47,9 +46,13 @@ export class Board extends Phaser.GameObjects.Group {
 
   paintMoves(tile: Tile) {
     if (!tile.unit) return
+    const unit = tile.unit
+    const color = unit.controller === 'player'
+      ? 0x00ff00
+      : 0xff0000
     tile.unit.paths.forEach(path => {
       const tile = this.getPathTile(path)
-      tile?.paintMovableSelect()
+      tile?.paintMovableSelect(color)
     })
   }
 

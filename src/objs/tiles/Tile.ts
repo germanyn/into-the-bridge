@@ -27,6 +27,9 @@ export abstract class Tile extends IsometricSprite {
       this.clearTint()
       this.deselect()
     })
+    this.scene.events.addListener('remove-tiles-paint', () => {
+      this.clearTint()
+    })
     this.setInteractive()
     // if ((this.gridX % 2) || (this.gridY % 2)) return
     // this.scene.add.text(this.x - this.width /2, this.y - this.height/2, `${this.depth}`, {
@@ -36,9 +39,14 @@ export abstract class Tile extends IsometricSprite {
 
   select() {
     if (this.selected) return
-    if (this.scene.selectedUnit) {
-      const moved = this.scene.selectedUnit.moveTo(this)
-      if (moved) return
+    if (
+      this.scene.selectedUnit &&
+      this.scene.selectedUnit.controller === 'player'
+    ) {
+      const acted = this.scene.attacking
+        ? this.scene.selectedUnit.attackTile(this)
+        : this.scene.selectedUnit.moveTo(this)
+      if (acted) return
     }
     if (this.unit) this.unit.select()
     this.scene.events.emit('deselect-all')
@@ -74,7 +82,12 @@ export abstract class Tile extends IsometricSprite {
     return this.canHaveUnit
   }
 
-  paintMovableSelect() {
+  paintMovableSelect(color: number) {
+    this.setTint(color)
+  }
+
+  paintAttackableTile() {
     this.setTint(0xff0000)
   }
+
 }

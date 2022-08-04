@@ -17,6 +17,8 @@ export abstract class Unit extends IsometricSprite {
   baseLife: number
   baseMovement: number
   controller: ControllerType = 'none'
+  movedThisTurn = false
+  currentLife: number = 0
 
   constructor(textureName: string, spriteParams: SpriteParams, {
     baseLife = 0,
@@ -26,6 +28,7 @@ export abstract class Unit extends IsometricSprite {
     this.baseLife = baseLife
     this.baseMovement = baseMovement
     this.adjustDepth()
+    this.currentLife = baseLife
   }
   select() {
     if (this.selected) return
@@ -45,6 +48,7 @@ export abstract class Unit extends IsometricSprite {
   }
 
   get paths() {
+    if (this.movedThisTurn === true) return []
     const maxDistance = this.baseMovement
     const pathFinding = this.pathFinding
     const paths: PathNode[][] = []
@@ -68,7 +72,7 @@ export abstract class Unit extends IsometricSprite {
       return this.scene.board.getPathTile(path) === tile
     })
     if (!path) return false
-    this.scene.events.emit('deselect-all')
+    this.scene.events.emit('remove-tiles-paint')
     const timeline = this.scene.tweens.createTimeline()
     const [firstNode, ...otherNodes] = path
     let previousTile = this.scene.board.floors[firstNode.x][firstNode.y]
@@ -99,6 +103,7 @@ export abstract class Unit extends IsometricSprite {
       tile.addUnit(this)
     })
     timeline.play()
+    this.movedThisTurn = true
     return true
   }
 
@@ -116,5 +121,23 @@ export abstract class Unit extends IsometricSprite {
     return this.scene.board.floors
       .flatMap(row => row)
       .find(tile => tile?.unit === this)
+  }
+  toggleAttack() {
+    this.scene.events.emit('remove-tiles-paint')
+    return false
+  }
+  attackTile(tile: Tile): boolean {
+    this.scene.attacking = false
+    this.scene.events.emit('remove-tiles-paint')
+    return false
+  }
+  hurt(damage: number) {
+    this.currentLife = damage >= this.currentLife
+      ? 0
+      : this.currentLife - damage
+    if (!this.currentLife) this.die()
+  }
+  die() {
+    this.destroy()
   }
 }
