@@ -1,6 +1,4 @@
-import { BOARD_SIZE } from "../../constants"
 import MainScene from "../../scenes/GameScene"
-import { isNumberBetweenOrEqual } from "../../utils/number-utils"
 import { Effect } from "../effects/Effect"
 import { Tile } from "../tiles/Tile"
 import { Unit } from "../Unit"
@@ -26,18 +24,15 @@ export abstract class Weapon {
       new Phaser.Math.Vector2(1, 0), // DOWN_RIGHT,
       new Phaser.Math.Vector2(0, -1), // DOWN_LEFT,
     ]
-    const grid = this.scene.board.tiles
     return directions.flatMap<Tile>(direction => {
       const target = new Phaser.Math.Vector2(currentTile.gridX, currentTile.gridY)
         .add(direction)
 
       const tiles: Tile[] = []
-      while(
-        isNumberBetweenOrEqual(target.x, 0, BOARD_SIZE - 1) &&
-        isNumberBetweenOrEqual(target.y, 0, BOARD_SIZE - 1) &&
-        target.distance(origin) <= this.pathSize
-      ) {
-        tiles.push(grid[target.x][target.y])
+      while(target.distance(origin) <= this.pathSize) {
+        const tile = this.scene.board.getTileAt(target)
+        if (!tile) return tiles
+        tiles.push(tile)
         target.add(direction)
       }
       return tiles

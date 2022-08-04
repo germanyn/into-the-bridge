@@ -1,6 +1,7 @@
 import { BOARD_SIZE } from "../constants"
 import MainScene from "../scenes/GameScene"
 import { IsometricSprite } from "./IsometricSprite"
+import { PathFinding } from "./path-finding/PathFinding"
 import { PathNode } from "./path-finding/PathNode"
 import { Floor } from "./tiles/Floor"
 import { Tile } from "./tiles/Tile"
@@ -8,7 +9,7 @@ import { Unit } from "./Unit"
 
 export class Board extends Phaser.GameObjects.Group {
   declare scene: MainScene
-  tiles: Floor[][]
+  private tiles: Floor[][]
   unities: IsometricSprite[] = []
 
   constructor(scene: MainScene) {
@@ -54,5 +55,28 @@ export class Board extends Phaser.GameObjects.Group {
     const endNode = path.at(-1)
     if (!endNode) return
     return this.tiles[endNode.x][endNode.y]
+  }
+
+  getTileAt(point: Phaser.Math.Vector2 | [number, number]): Tile | undefined {
+    const tile = point instanceof Phaser.Math.Vector2
+      ? this.tiles[point.x]?.[point.y]
+      : this.tiles[point[0]][point[1]]
+    return tile
+  }
+
+  getUnitTile(unit: Unit) {
+    return this.scene.board.tiles
+      .flatMap(row => row)
+      .find(tile => tile?.unit === unit)
+  }
+
+  buildUnitPathFinding(unit: Unit) {
+    const pathFinding = new PathFinding(BOARD_SIZE, BOARD_SIZE)
+    this.scene.board.tiles.forEach((row, x) => {
+      row.forEach((tile, y) => {
+        pathFinding.grid[x][y].isWalkable = tile.isWalkableBy(unit)
+      })
+    })
+    return pathFinding
   }
 }

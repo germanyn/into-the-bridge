@@ -66,7 +66,7 @@ export abstract class Unit extends IsometricSprite {
     for (let x = this.gridX - maxDistance; x < this.gridX + maxDistance + 1; ++x) {
       for (let y = this.gridY - maxDistance; y < this.gridY + maxDistance + 1; ++y) {
         if (x < 0 || x > BOARD_SIZE - 1 || y < 0 || y > BOARD_SIZE - 1) continue
-        const tile = this.scene.board.tiles[x]?.[y]
+        const tile = this.scene.board.getTileAt([x, y])
         if (!tile) continue
         if (!tile.canBeOcupied(this)) continue
         const path = pathFinding.findPath([this.gridX, this.gridY], [x, y])
@@ -86,10 +86,11 @@ export abstract class Unit extends IsometricSprite {
     this.scene.events.emit('remove-tiles-paint')
     const timeline = this.scene.tweens.createTimeline()
     const [firstNode, ...otherNodes] = path
-    let previousTile = this.scene.board.tiles[firstNode.x][firstNode.y]
+    let previousTile = this.scene.board.getTileAt([firstNode.x, firstNode.y])
     for (const node of otherNodes) {
       const currentTile = previousTile
-      const toTile = this.scene.board.tiles[node.x][node.y]
+      const toTile = this.scene.board.getTileAt([node.x, node.y])
+      if (!toTile) throw new Error(`Can't move to a tile that not exists`)
       const animationPath = new Phaser.Curves.Path(this.x, this.y)
       const [newX, newY] = this.scene.calculateTilePosition(node.coordinates)
       animationPath.lineTo(newX + this.offsetX, newY + this.offsetY)
@@ -119,18 +120,11 @@ export abstract class Unit extends IsometricSprite {
 
 
   get pathFinding() {
-    const pathFinding = new PathFinding(BOARD_SIZE, BOARD_SIZE)
-    this.scene.board.tiles.forEach((row, x) => {
-      row.forEach((tile, y) => {
-        pathFinding.grid[x][y].isWalkable = tile.isWalkableBy(this)
-      })
-    })
-    return pathFinding
+    return this.scene.board.buildUnitPathFinding(this)
   }
+
   get currentTile() {
-    return this.scene.board.tiles
-      .flatMap(row => row)
-      .find(tile => tile?.unit === this)
+    return this.scene.board.getUnitTile(this)
   }
   toggleAttack() {
     this.scene.events.emit('remove-tiles-paint')
@@ -184,7 +178,7 @@ export abstract class Unit extends IsometricSprite {
   push(direction: Phaser.Math.Vector2) {
     if (!this.currentTile) return
     const { gridX, gridY } = this.currentTile
-    const toTile = this.scene.board.tiles[gridX + direction.x]?.[gridY + direction.y]
+    const toTile = this.scene.board.getTileAt([gridX + direction.x, gridY + direction.y])
     if (!toTile) return
     const oldPosition = new Phaser.Math.Vector2(this.x, this.y)
     const [newX, newY] = this.scene.calculateTilePosition([toTile.gridX, toTile.gridY])
