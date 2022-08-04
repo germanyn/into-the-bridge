@@ -26,7 +26,7 @@ export abstract class Weapon {
       new Phaser.Math.Vector2(1, 0), // DOWN_RIGHT,
       new Phaser.Math.Vector2(0, -1), // DOWN_LEFT,
     ]
-    const grid = this.scene.board.floors
+    const grid = this.scene.board.tiles
     return directions.flatMap<Tile>(direction => {
       const target = new Phaser.Math.Vector2(currentTile.gridX, currentTile.gridY)
         .add(direction)

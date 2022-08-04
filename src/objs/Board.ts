@@ -8,12 +8,12 @@ import { Unit } from "./Unit"
 
 export class Board extends Phaser.GameObjects.Group {
   declare scene: MainScene
-  floors: Floor[][]
+  tiles: Floor[][]
   unities: IsometricSprite[] = []
 
   constructor(scene: MainScene) {
     super(scene)
-    this.floors = Array.from(Array(BOARD_SIZE), (_, x) => {
+    this.tiles = Array.from(Array(BOARD_SIZE), (_, x) => {
       return Array.from(Array(BOARD_SIZE), (_, y) => {
         const tile = new Floor(scene, x, y)
         tile.setInteractive()
@@ -33,7 +33,7 @@ export class Board extends Phaser.GameObjects.Group {
   addUnit(unit: Unit) {
     this.add(unit)
     this.unities.push(unit)
-    const floor = this.floors[unit.gridX]?.[unit.gridY]
+    const floor = this.tiles[unit.gridX]?.[unit.gridY]
     if (!floor) throw new Error("There's no floor for this unit")
     floor.addUnit(unit)
   }
@@ -53,6 +53,6 @@ export class Board extends Phaser.GameObjects.Group {
   getPathTile(path: PathNode[]): Tile | undefined {
     const endNode = path.at(-1)
     if (!endNode) return
-    return this.floors[endNode.x][endNode.y]
+    return this.tiles[endNode.x][endNode.y]
   }
 }
