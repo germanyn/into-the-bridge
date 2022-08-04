@@ -19,8 +19,8 @@ export class Punch extends Weapon {
   }
 
   getSkillEffect(unit: Unit, targetTile: Tile): Effect[] {
-    if (!unit.currentTile) return []
-    const origin = new Phaser.Math.Vector2(unit.currentTile.gridX, unit.currentTile.gridY)
+    if (!unit.tile) return []
+    const origin = new Phaser.Math.Vector2(unit.tile.gridX, unit.tile.gridY)
     const target = new Phaser.Math.Vector2(targetTile.gridX, targetTile.gridY)
     const direction = target.subtract(origin.clone()).normalize()
     return [

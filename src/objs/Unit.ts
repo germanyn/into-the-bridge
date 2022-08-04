@@ -110,7 +110,7 @@ export abstract class Unit extends IsometricSprite {
       previousTile = toTile
     }
     timeline.once(Phaser.Tweens.Events.TIMELINE_COMPLETE, () => {
-      this.currentTile?.removeUnit()
+      this.tile?.removeUnit()
       tile.addUnit(this)
     })
     timeline.play()
@@ -123,25 +123,25 @@ export abstract class Unit extends IsometricSprite {
     return this.scene.board.buildUnitPathFinding(this)
   }
 
-  get currentTile() {
+  get tile() {
     return this.scene.board.getUnitTile(this)
   }
   toggleAttack() {
     this.scene.events.emit('remove-tiles-paint')
     if (!this.weapons.length) return
-    if (!this.currentTile) return
+    if (!this.tile) return
 
     const [weapon] = this.weapons
-    const tiles = weapon.getTargetArea(this.currentTile)
+    const tiles = weapon.getTargetArea(this.tile)
     if (!tiles.length) return false
     tiles.forEach(tile => tile.paintAttackableTile())
     return false
   }
 
   get attackTiles(): Tile[] {
-    if (!this.currentTile) return []
+    if (!this.tile) return []
     if (!this.canAttack) return []
-    return this.weapons[0].getTargetArea(this.currentTile)
+    return this.weapons[0].getTargetArea(this.tile)
   }
 
   attackTile(tile: Tile): boolean {
@@ -170,14 +170,14 @@ export abstract class Unit extends IsometricSprite {
         this.setAlpha(tween.getValue())
       },
       onComplete: () => {
-        this.currentTile?.removeUnit()
+        this.tile?.removeUnit()
         this.destroy()
       }
     })
   }
   push(direction: Phaser.Math.Vector2) {
-    if (!this.currentTile) return
-    const { gridX, gridY } = this.currentTile
+    if (!this.tile) return
+    const { gridX, gridY } = this.tile
     const toTile = this.scene.board.getTileAt([gridX + direction.x, gridY + direction.y])
     if (!toTile) return
     const oldPosition = new Phaser.Math.Vector2(this.x, this.y)
@@ -187,7 +187,7 @@ export abstract class Unit extends IsometricSprite {
       x: newX + this.offsetX,
       y: newY + this.offsetY,
       onStart: () => {
-        if (!this.currentTile || toTile.depth < this.currentTile.depth ) return
+        if (!this.tile || toTile.depth < this.tile.depth ) return
         this.depth = toTile.depth +1
       },
       onComplete: () => {
@@ -198,7 +198,7 @@ export abstract class Unit extends IsometricSprite {
           this.hurt(1)
         } else {
           this.depth = toTile.depth + 1
-          this.currentTile?.removeUnit()
+          this.tile?.removeUnit()
           toTile.addUnit(this)
         }
       },
