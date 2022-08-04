@@ -70,12 +70,12 @@ export default class MainScene extends Phaser.Scene {
       new Goblin({
         scene: this,
         x: 1,
-        y: 5,
+        y: 4,
       }),
       new Pillar({
         scene: this,
         x: 1,
-        y: 6,
+        y: 5,
       }),
     ]
     unities.forEach(unit => this.board.addUnit(unit))
