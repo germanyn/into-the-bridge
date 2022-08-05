@@ -13,9 +13,12 @@ export const GAME_SCENE_KEY = 'GameScene'
 export default class MainScene extends Phaser.Scene {
   board!: Board
   selectedUnit?: Unit
-  attacking = false
+  selectedWeaponIndex?: number = undefined
   constructor() {
-    super(GAME_SCENE_KEY);
+    super({
+      key: GAME_SCENE_KEY,
+      active: true,
+    })
   }
 
   init() {
@@ -36,18 +39,39 @@ export default class MainScene extends Phaser.Scene {
 
   create() {
     this.events.addListener('select-tile', (tile: Tile) => {
-      if (!tile.unit) return
+      this.events.emit('remove-tiles-paint')
+      if (
+        this.selectedUnit &&
+        this.selectedUnit.controller === 'player'
+      ) {
+        if (typeof this.selectedWeaponIndex === 'number') {
+          const acted = this.selectedUnit.attack(this.selectedWeaponIndex, tile)
+          this.selectedWeaponIndex = undefined
+          if (acted) {
+            this.events.emit('unit-attacked', this.selectedUnit)
+            return
+          }
+        } else {
+          const acted = this.selectedUnit.moveTo(tile)
+          if (acted) return
+        }
+      }
+      this.events.emit('deselect-all')
+      this.events.emit('detail-tile', tile)
+      tile.select()
       this.selectedUnit = tile.unit
-      this.attacking = false
+      this.board.paintMoves(tile)
     })
-    this.events.addListener('deselect-all', (tile: Tile) => {
-      this.selectedUnit = undefined
-      this.attacking = false
-    })
-    this.events.addListener('toggle-attack', () => {
+    this.events.addListener('toggle-attack', (weaponIndex: number) => {
       if (!this.selectedUnit) return
-      this.attacking = true
-      this.selectedUnit.toggleAttack()
+      this.events.emit('remove-tiles-paint')
+      this.selectedWeaponIndex = weaponIndex
+      this.selectedUnit.toggleAttack(weaponIndex)
+    })
+    this.events.addListener('background-click', () => {
+      this.events.emit('deselect-all')
+      this.selectedUnit = undefined
+      this.selectedWeaponIndex = undefined
     })
     this.board = new Board(this)
     this.add.existing(this.board)

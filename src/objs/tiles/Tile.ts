@@ -4,7 +4,6 @@ import { Unit } from "../Unit";
 
 export abstract class Tile extends IsometricSprite {
   unit?: Unit
-  selected = false
   canHaveUnit = true
   abstract name: string
   abstract description: string
@@ -15,7 +14,7 @@ export abstract class Tile extends IsometricSprite {
       y,
     })
     this.on(Phaser.Input.Events.POINTER_DOWN, () => {
-      this.select()
+      this.scene.events.emit('select-tile', this)
     })
     this.on(Phaser.Input.Events.POINTER_OVER, () => {
       this.setAlpha(0.5)
@@ -38,27 +37,12 @@ export abstract class Tile extends IsometricSprite {
   }
 
   select() {
-    if (this.selected) return
-    if (
-      this.scene.selectedUnit &&
-      this.scene.selectedUnit.controller === 'player'
-    ) {
-      const acted = this.scene.attacking
-        ? this.scene.selectedUnit.attackTile(this)
-        : this.scene.selectedUnit.moveTo(this)
-      if (acted) return
-    }
-    if (this.unit) this.unit.select()
-    this.scene.events.emit('deselect-all')
-    this.scene.events.emit('select-tile', this)
-    this.selected = true
+    this.unit?.select()
     this.setTint(0xa0ffa0)
   }
 
   deselect() {
-    if (!this.selected) return
-    if (this.unit) this.unit.deselect()
-    this.selected = false
+    this.unit?.deselect()
     this.clearTint()
   }
 

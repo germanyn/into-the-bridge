@@ -1,3 +1,4 @@
+import { Math } from "phaser"
 import { BOARD_SIZE } from "../constants"
 import { IsometricSprite, SpriteParams } from "./IsometricSprite"
 import { PathNode } from "./path-finding/PathNode"
@@ -50,7 +51,7 @@ export abstract class Unit extends IsometricSprite {
   }
 
   get canMove() {
-    return !this.movedThisTurn
+    return !this.movedThisTurn && !this.attackedThisTurn
   }
 
   get canAttack() {
@@ -82,7 +83,6 @@ export abstract class Unit extends IsometricSprite {
       return this.scene.board.getPathTile(path) === tile
     })
     if (!path) return false
-    this.scene.events.emit('remove-tiles-paint')
     const timeline = this.scene.tweens.createTimeline()
     const [firstNode, ...otherNodes] = path
     let previousTile = this.scene.board.getTileAt([firstNode.x, firstNode.y])
@@ -104,14 +104,12 @@ export abstract class Unit extends IsometricSprite {
         onComplete: () => {
           this.depth = toTile.depth + 1
         },
-        duration: 200,
+        duration: 175,
       })
       previousTile = toTile
     }
-    timeline.once(Phaser.Tweens.Events.TIMELINE_COMPLETE, () => {
-      this.tile?.removeUnit()
-      tile.addUnit(this)
-    })
+    this.tile?.removeUnit()
+    tile.addUnit(this)
     timeline.play()
     this.movedThisTurn = true
     return true
@@ -125,32 +123,33 @@ export abstract class Unit extends IsometricSprite {
   get tile() {
     return this.scene.board.getUnitTile(this)
   }
-  toggleAttack() {
-    this.scene.events.emit('remove-tiles-paint')
+  toggleAttack(weaponIndex: number) {
     if (!this.weapons.length) return
     if (!this.tile) return
 
-    const [weapon] = this.weapons
+    const weapon = this.weapons.at(weaponIndex)
+    if (!weapon) throw new Error(`Unit has no weapon at ${weaponIndex}`)
     const tiles = weapon.getTargetArea(this.tile)
     if (!tiles.length) return false
     tiles.forEach(tile => tile.paintAttackableTile())
     return false
   }
 
-  get attackTiles(): Tile[] {
+  getWeaponTargets(weaponIndex: number): Tile[] {
+    const weapon = this.weapons.at(weaponIndex)
+    if (!weapon) return []
     if (!this.tile) return []
     if (!this.canAttack) return []
-    return this.weapons[0].getTargetArea(this.tile)
+    return weapon.getTargetArea(this.tile)
   }
 
-  attackTile(tile: Tile): boolean {
-    this.scene.attacking = false
-    this.scene.events.emit('remove-tiles-paint')
-    if (!this.attackTiles.some(attackTile => attackTile === tile)) return false
-    if (!tile.unit) return true
-    this.weapons[0].getSkillEffect(this, tile).forEach(effect => {
-      effect.apply()
-    });
+  attack(weaponIndex: number, target: Tile): boolean {
+    const weapon = this.weapons.at(weaponIndex)
+    if (!weapon) throw new Error(`No weapon at index ${weaponIndex}`)
+    if (!this.tile) throw new Error(`Unit is not in the board`)
+    const attacked = weapon.attack(this.tile, target)
+    if (!attacked) return false
+    this.attackedThisTurn = true
     return true
   }
 
@@ -164,7 +163,7 @@ export abstract class Unit extends IsometricSprite {
     this.scene.tweens.addCounter({
       from: 1,
       to: 0,
-      duration: 300,
+      duration: 500,
       onUpdate: (tween) => {
         this.setAlpha(tween.getValue())
       },
@@ -176,32 +175,58 @@ export abstract class Unit extends IsometricSprite {
   }
   push(direction: Phaser.Math.Vector2) {
     if (!this.tile) return
+    if (!this.canBePushed) return
     const { gridX, gridY } = this.tile
     const toTile = this.scene.board.getTileAt([gridX + direction.x, gridY + direction.y])
     if (!toTile) return
+    const tileOccupied = !!toTile.unit
     const oldPosition = new Phaser.Math.Vector2(this.x, this.y)
     const [newX, newY] = this.scene.calculateTilePosition([toTile.gridX, toTile.gridY])
-    this.scene.tweens.add({
-      targets: this,
-      x: newX + this.offsetX,
-      y: newY + this.offsetY,
-      onStart: () => {
-        if (!this.tile || toTile.depth < this.tile.depth ) return
-        this.depth = toTile.depth +1
-      },
-      onComplete: () => {
-        if (toTile.unit) {
-          this.setX(oldPosition.x)
-          this.setY(oldPosition.y)
-          toTile.unit.hurt(1)
-          this.hurt(1)
-        } else {
+    const timeline = this.scene.tweens.createTimeline()
+    if (!tileOccupied) {
+      timeline.add({
+        targets: this,
+        x: newX + this.offsetX,
+        y: newY + this.offsetY,
+        onStart: () => {
+          if (!this.tile || toTile.depth < this.tile.depth ) return
           this.depth = toTile.depth + 1
-          this.tile?.removeUnit()
-          toTile.addUnit(this)
+        },
+        duration: 250,
+      })
+    } else {
+      const halfTileDirection = new Math.Vector2({ x: newX, y: newY })
+        .normalize()
+        .multiply({ x: -8, y: -8 })
+        .rotate(Math.PI2 / 4)
+      timeline.add({
+        targets: this,
+        x: newX + this.offsetX + halfTileDirection.x,
+        y: newY + this.offsetY + halfTileDirection.y,
+        onStart: () => {
+          if (!this.tile || toTile.depth < this.tile.depth ) return
+          this.depth = toTile.depth + 1
+        },
+        duration: 200,
+      })
+      timeline.add({
+        targets: this,
+        x: oldPosition.x,
+        y: oldPosition.y,
+        duration: 125,
+        onComplete: () => {
+          this.depth = toTile.depth + 1
         }
-      },
-      duration: 250,
-    })
+      })
+    }
+    timeline.play()
+    
+    if (toTile.unit) {
+      toTile.unit.hurt(1)
+      this.hurt(1)
+    } else {
+      this.tile?.removeUnit()
+      toTile.addUnit(this)
+    }
   }
 }

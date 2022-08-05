@@ -38,5 +38,16 @@ export abstract class Weapon {
       return tiles
     })
   }
-  abstract getSkillEffect(unit: Unit, targetTile: Tile): Effect[]
+
+  attack(origin: Tile, target: Tile): boolean {
+    const attackableTiles = this.getTargetArea(origin)
+    if (!attackableTiles.some(attackTile => attackTile === target)) return false
+    if (!target.unit) return true
+    this.getSkillEffect(origin, target).forEach(effect => {
+      effect.apply()
+    });
+    return true
+  }
+
+  abstract getSkillEffect(originTile: Tile, targetTile: Tile): Effect[]
 }

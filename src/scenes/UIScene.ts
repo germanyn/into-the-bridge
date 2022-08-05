@@ -24,6 +24,7 @@ export class UIScene extends Phaser.Scene {
     let selectedUnit: Unit | undefined = undefined
 
     const game = this.scene.get(GAME_SCENE_KEY);
+  
     let attackToggled = false
     const attackButton = this.add
       .image(24, this.renderer.height - 24, '')
@@ -33,34 +34,43 @@ export class UIScene extends Phaser.Scene {
         if (!selectedUnit) return
         if (!selectedUnit.canAttack) return
         if (attackToggled) return
-        game.events.emit('toggle-attack')
+        game.events.emit('toggle-attack', 0)
       })
 
-    game.events.on('deselect-all', () => {
+    game.events.on('detail-tile', (tile: Floor) => {
+      name.setText(tile.name)
+      description.setText(tile.description)
+      name.visible = true
+      description.visible = true
+      selectedUnit = tile.unit
+      if (
+        selectedUnit &&
+        selectedUnit.controller === 'player'
+      )  {
+        attackButton.setTexture(selectedUnit.weapons[0].icon)
+        if (!selectedUnit.canAttack) {
+          attackButton.setTint(0x444444)
+        }  else {
+          attackButton.clearTint
+        }
+        attackButton.visible = true
+      } else {
+        attackButton.visible = false
+      }
+    })
+
+    game.events.on('unit-attacked', (unit: Unit) => {
+      attackToggled = false
+      uiState = 'choosing-movement-tile'
+      attackButton.setTint(0x444444)
+    })
+
+    game.events.on('background-click', () => {
       name.visible = false
       description.visible = false
       attackButton.visible = false
       attackToggled = false
       uiState = 'none'
-    })
-
-    game.events.on('select-tile', (tile: Floor) => {
-      name.setText(tile.name)
-      description.setText(tile.description)
-      name.visible = true
-      description.visible = true
-      if (
-        !tile.unit ||
-        tile.unit.controller !== 'player'
-      ) return
-      selectedUnit = tile.unit
-      attackButton.setTexture(tile.unit.weapons[0].icon)
-      if (!selectedUnit.canAttack) {
-        attackButton.setAlpha(0.5)
-      }  else {
-        attackButton.setAlpha(1)
-      }
-      attackButton.visible = true
     })
   }
 }

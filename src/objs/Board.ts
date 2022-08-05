@@ -24,10 +24,7 @@ export class Board extends Phaser.GameObjects.Group {
     })
     this.scene.input.on(Phaser.Input.Events.GAMEOBJECT_POINTER_DOWN, (_: never, objects: Phaser.GameObjects.Sprite[]) => {
       if (objects.some(object => object instanceof Floor)) return
-      this.scene.events.emit('deselect-all')
-    })
-    this.scene.events.addListener('select-tile', (tile: Tile) => {
-      this.paintMoves(tile)
+      // this.scene.events.emit('background-click')
     })
   }
 

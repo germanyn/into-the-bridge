@@ -16,6 +16,7 @@ export class Pillar extends Unit {
     })
     this.alpha = 0.80
     this.name = 'Pillar'
+    this.canBePushed = false
   }
 
 }
