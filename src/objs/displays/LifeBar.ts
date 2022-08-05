@@ -36,10 +36,9 @@ export class LifeBar extends GameObjects.Graphics {
     this.max = max
     this.current = current ?? max
     this.draw()
-    this.setX(x)
-    this.setY(y)
+    this.setX(x - OFFSET_X)
+    this.setY(y - OFFSET_Y)
     scene.add.existing(this)
-    this.depth = 1000
   }
 
   draw() {
@@ -47,19 +46,19 @@ export class LifeBar extends GameObjects.Graphics {
 
     // Outter white line
     this.fillStyle(0xffffff);
-    this.fillRect(this.x, this.y, WIDTH, HEIGHT);
+    this.fillRect(0, 0, WIDTH, HEIGHT);
 
     // Inner black background
     this.fillStyle(0x000000);
     this.fillRect(
-      this.x + OUTTER_BORDER_WIDTH,
-      this.y + OUTTER_BORDER_WIDTH,
+      0 + OUTTER_BORDER_WIDTH,
+      0 + OUTTER_BORDER_WIDTH,
       WIDTH - OUTTER_BORDER_WIDTH * 2,
       HEIGHT - OUTTER_BORDER_WIDTH * 2,
     );
 
-    const fillStartX = this.x + BORDER_WIDTH
-    const fillStartY = this.y + BORDER_WIDTH
+    const fillStartX = 0 + BORDER_WIDTH
+    const fillStartY = 0 + BORDER_WIDTH
 
     // Filled green life
     this.fillStyle(0x00ff00);
@@ -85,7 +84,6 @@ export class LifeBar extends GameObjects.Graphics {
 
   get lifeWidth() {
     const ratio = this.current / this.max
-    console.log(ratio)
     return Math.floor(ratio * FILL_WIDTH)
   }
 
@@ -95,12 +93,5 @@ export class LifeBar extends GameObjects.Graphics {
 
   hide() {
     this.visible = false
-  }
-
-  setX(value: number): this {
-    return super.setX(value - OFFSET_X)
-  }
-  setY(value: number): this {
-    return super.setY(value - OFFSET_Y)
   }
 }

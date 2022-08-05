@@ -1,5 +1,7 @@
-import { Math } from "phaser"
+import { GameObjects, Math } from "phaser"
 import { BOARD_SIZE } from "../constants"
+import MainScene from "../scenes/GameScene"
+import { LifeBar } from "./displays/LifeBar"
 import { IsometricSprite, SpriteParams } from "./IsometricSprite"
 import { PathNode } from "./path-finding/PathNode"
 import { OutlinePipeline } from "./shaders/OutlinePipeline"
@@ -13,7 +15,8 @@ export type UnitParams = {
 
 export type ControllerType = 'none' | 'player' | 'enemy'
 
-export abstract class Unit extends IsometricSprite {
+export abstract class Unit extends GameObjects.Container {
+  declare scene: MainScene
   selected = false
   baseLife: number
   baseMovement: number
@@ -23,31 +26,49 @@ export abstract class Unit extends IsometricSprite {
   life: number = 0
   canBePushed = true
   weapons: Weapon[] = []
+  sprite: IsometricSprite
+  lifeBar: LifeBar
 
   constructor(textureName: string, spriteParams: SpriteParams, {
     baseLife = 0,
     baseMovement = 0,
   }: UnitParams = {}) {
-    super(textureName, spriteParams)
+    super(spriteParams.scene)
     this.baseLife = baseLife
     this.baseMovement = baseMovement
     this.life = baseLife
+    this.sprite = new IsometricSprite(textureName, spriteParams)
+    this.x = this.sprite.x
+    this.y = this.sprite.y
+    this.sprite.x = 0
+    this.sprite.y = 0
+    this.add(this.sprite)
+    this.scene.add.existing(this)
+    this.depth = this.sprite.depth
+    this.lifeBar = new LifeBar({
+      scene: this.scene,
+      x: 0,
+      y: -16,
+      current: this.life,
+      max: this.baseLife,
+    })
+    this.add(this.lifeBar)
   }
   select() {
     if (this.selected) return
     this.selected = true
-    this.setPipeline(OutlinePipeline.KEY)
-    this.pipeline.set2f(
+    this.sprite.setPipeline(OutlinePipeline.KEY)
+    this.sprite.pipeline.set2f(
       "uTextureSize",
-      this.texture.getSourceImage().width,
-      this.texture.getSourceImage().height
+      this.sprite.texture.getSourceImage().width,
+      this.sprite.texture.getSourceImage().height
     )
   }
 
   deselect() {
     if (!this.selected) return
     this.selected = false
-    this.resetPipeline()
+    this.sprite.resetPipeline()
   }
 
   get canMove() {
@@ -78,7 +99,7 @@ export abstract class Unit extends IsometricSprite {
     return paths
   }
 
-  moveTo(tile: Tile): boolean {
+  moveToTile(tile: Tile): boolean {
     const path = this.paths.find(path => {
       return this.scene.board.getPathTile(path) === tile
     })
@@ -158,6 +179,8 @@ export abstract class Unit extends IsometricSprite {
       ? 0
       : this.life - damage
     if (!this.life) this.die()
+    this.lifeBar.current = this.life
+    this.lifeBar.draw()
   }
   die() {
     this.scene.tweens.addCounter({
@@ -233,5 +256,37 @@ export abstract class Unit extends IsometricSprite {
   newTurn(): void {
     this.attackedThisTurn = false
     this.movedThisTurn = false
+  }
+
+  get gridX() {
+    return this.sprite.gridX
+  }
+
+  get gridY() {
+    return this.sprite.gridY
+  }
+
+  set gridX(value: this['sprite']['gridX']) {
+    this.sprite.gridX = value
+  }
+
+  set gridY(value: this['sprite']['gridY']) {
+    this.sprite.gridY = value
+  }
+
+  get offsetX() {
+    return this.sprite.offsetX
+  }
+
+  get offsetY() {
+    return this.sprite.offsetY
+  }
+
+  set offsetX(value: this['sprite']['offsetX']) {
+    this.sprite.offsetX = value
+  }
+
+  set offsetY(value: this['sprite']['offsetY']) {
+    this.sprite.offsetY = value
   }
 }

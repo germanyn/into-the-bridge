@@ -1,4 +1,4 @@
-import Phaser from 'phaser';
+import Phaser, { GameObjects } from 'phaser';
 import { BOARD_SIZE, CENTER_X, CENTER_Y, TILE_HEIGHT, TILE_HHEIGHT, TILE_HWIDTH, TILE_WIDTH } from '../constants';
 import { Board } from '../objs/Board';
 import { Goblin } from '../objs/Goblin';
@@ -52,7 +52,7 @@ export default class MainScene extends Phaser.Scene {
             return
           }
         } else {
-          const acted = this.selectedUnit.moveTo(tile)
+          const acted = this.selectedUnit.moveToTile(tile)
           if (acted) return
         }
       }
@@ -85,15 +85,10 @@ export default class MainScene extends Phaser.Scene {
         x: 1,
         y: 2,
       }),
-      new Pillar({
+      new Goblin({
         scene: this,
         x: 3,
         y: 2,
-      }),
-      new Pillar({
-        scene: this,
-        x: 5,
-        y: 4,
       }),
       new Goblin({
         scene: this,

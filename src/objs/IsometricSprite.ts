@@ -16,7 +16,7 @@ export type UnitParams = {
 
 export type ControllerType = 'none' | 'player' | 'enemy'
 
-export abstract class IsometricSprite extends Phaser.GameObjects.Sprite {
+export class IsometricSprite extends Phaser.GameObjects.Sprite {
   declare scene: MainScene
   offsetX: number
   offsetY: number
