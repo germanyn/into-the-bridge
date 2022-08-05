@@ -16,12 +16,11 @@ const INNER_BORDER_WIDTH = 1
 const BORDER_WIDTH = OUTTER_BORDER_WIDTH + INNER_BORDER_WIDTH
 const FILL_HEIGHT = HEIGHT - BORDER_WIDTH * 2
 const FILL_WIDTH = WIDTH - BORDER_WIDTH * 2
+const OFFSET_X = WIDTH / 2
+const OFFSET_Y = HEIGHT / 2
 
-export class LifeBar {
+export class LifeBar extends GameObjects.Graphics {
   scene: MainScene
-  x: number
-  y: number
-  bar: GameObjects.Graphics
   current: number = 0
   max: number = 0
 
@@ -32,25 +31,27 @@ export class LifeBar {
     current,
     max,
   }: LifeBarParams) {
+    super(scene)
     this.scene = scene
-    this.x = x
-    this.y = y
     this.max = max
     this.current = current ?? max
-    this.bar = new GameObjects.Graphics(scene)
     this.draw()
-    scene.add.existing(this.bar)
-    this.bar.depth = 1000
+    this.setX(x)
+    this.setY(y)
+    scene.add.existing(this)
+    this.depth = 1000
   }
 
   draw() {
-    this.bar.clear()
+    this.clear()
 
-    this.bar.fillStyle(0xffffff);
-    this.bar.fillRect(this.x, this.y, WIDTH, HEIGHT);
+    // Outter white line
+    this.fillStyle(0xffffff);
+    this.fillRect(this.x, this.y, WIDTH, HEIGHT);
 
-    this.bar.fillStyle(0x000000);
-    this.bar.fillRect(
+    // Inner black background
+    this.fillStyle(0x000000);
+    this.fillRect(
       this.x + OUTTER_BORDER_WIDTH,
       this.y + OUTTER_BORDER_WIDTH,
       WIDTH - OUTTER_BORDER_WIDTH * 2,
@@ -60,18 +61,20 @@ export class LifeBar {
     const fillStartX = this.x + BORDER_WIDTH
     const fillStartY = this.y + BORDER_WIDTH
 
-    this.bar.fillStyle(0x00ff00);
-    this.bar.fillRect(
+    // Filled green life
+    this.fillStyle(0x00ff00);
+    this.fillRect(
       fillStartX,
       fillStartY,
       this.lifeWidth,
       FILL_HEIGHT,
     );
   
+    // Life bar sections
     for (let i = 1; i < this.max; ++i) {
       const offsetX = Math.ceil(FILL_WIDTH / this.max * i )
-      this.bar.lineStyle(1, 0x000000);
-      this.bar.lineBetween(
+      this.lineStyle(1, 0x000000);
+      this.lineBetween(
         fillStartX + offsetX,
         fillStartY,
         fillStartX + offsetX,
@@ -87,10 +90,17 @@ export class LifeBar {
   }
 
   show() {
-    this.bar.visible = true
+    this.visible = true
   }
 
   hide() {
-    this.bar.visible = false
+    this.visible = false
+  }
+
+  setX(value: number): this {
+    return super.setX(value - OFFSET_X)
+  }
+  setY(value: number): this {
+    return super.setY(value - OFFSET_Y)
   }
 }
