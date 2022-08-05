@@ -19,7 +19,6 @@ export class Goblin extends Unit {
         baseMovement: 2,
       },
     )
-    this.scale = 0.5
     this.controller = 'enemy'
     this.name = 'Goblin'
   }

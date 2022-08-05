@@ -34,7 +34,7 @@ export default class MainScene extends Phaser.Scene {
     this.load.image('floor', 'assets/tavern/individual-floor-tiles/tavern-floor (1).png');
     this.load.image('hero', 'assets/hero/Individual Sprites/adventurer-idle-00.png');
     this.load.image('pillar', 'assets/tavern/individual-walls/tavern-walls (65).png');
-    this.load.image('goblin', 'assets/goblin/tile008.png');
+    this.load.image('goblin', 'assets/goblin_32/tile008.png');
   }
 
   create() {
