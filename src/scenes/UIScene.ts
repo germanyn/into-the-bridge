@@ -18,7 +18,6 @@ export class UIScene extends Phaser.Scene {
   }
 
   create() {
-    let uiState: 'none' | 'choosing-movement-tile' | 'choosing-attack-tile' | 'confirming-attack-action' = 'none'
     const name = this.add.text(10, 10, '', { font: 'bold 14px Arial' });
     const description = this.add.text(10, 24, '', { font: '10px Arial' });
     let selectedUnit: Unit | undefined = undefined
@@ -35,6 +34,13 @@ export class UIScene extends Phaser.Scene {
         if (!selectedUnit.canAttack) return
         if (attackToggled) return
         game.events.emit('toggle-attack', 0)
+      })
+    const endTurnButton = this.add
+      .text(this.renderer.width - 68, this.renderer.height - 24, 'End Turn', { font: 'bold 14px Arial', align: 'left' })
+      .setInteractive()
+      .setVisible(true)
+      .on(Phaser.Input.Events.POINTER_DOWN, () => {
+        game.events.emit('end-turn', 0)
       })
 
     game.events.on('detail-tile', (tile: Floor) => {
@@ -61,7 +67,6 @@ export class UIScene extends Phaser.Scene {
 
     game.events.on('unit-attacked', (unit: Unit) => {
       attackToggled = false
-      uiState = 'choosing-movement-tile'
       attackButton.setTint(0x444444)
     })
 
@@ -70,7 +75,6 @@ export class UIScene extends Phaser.Scene {
       description.visible = false
       attackButton.visible = false
       attackToggled = false
-      uiState = 'none'
     })
   }
 }

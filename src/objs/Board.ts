@@ -1,6 +1,5 @@
 import { BOARD_SIZE } from "../constants"
 import MainScene from "../scenes/GameScene"
-import { IsometricSprite } from "./IsometricSprite"
 import { PathFinding } from "./path-finding/PathFinding"
 import { PathNode } from "./path-finding/PathNode"
 import { Floor } from "./tiles/Floor"
@@ -10,7 +9,7 @@ import { Unit } from "./Unit"
 export class Board extends Phaser.GameObjects.Group {
   declare scene: MainScene
   private tiles: Floor[][]
-  unities: IsometricSprite[] = []
+  unities: Unit[] = []
 
   constructor(scene: MainScene) {
     super(scene)
@@ -75,5 +74,9 @@ export class Board extends Phaser.GameObjects.Group {
       })
     })
     return pathFinding
+  }
+
+  newTurn() {
+    this.unities.forEach(unit => unit.newTurn())
   }
 }

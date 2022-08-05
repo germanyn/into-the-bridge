@@ -229,4 +229,9 @@ export abstract class Unit extends IsometricSprite {
       toTile.addUnit(this)
     }
   }
+
+  newTurn(): void {
+    this.attackedThisTurn = false
+    this.movedThisTurn = false
+  }
 }

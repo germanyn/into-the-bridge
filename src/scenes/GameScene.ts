@@ -73,6 +73,10 @@ export default class MainScene extends Phaser.Scene {
       this.selectedUnit = undefined
       this.selectedWeaponIndex = undefined
     })
+    this.events.addListener('end-turn', () => {
+      this.events.emit('deselect-all')
+      this.board.newTurn()
+    })
     this.board = new Board(this)
     this.add.existing(this.board)
     const unities = [
