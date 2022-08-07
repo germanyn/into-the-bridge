@@ -1,5 +1,6 @@
 import { SpriteParams } from "./IsometricSprite";
 import { Unit } from "./Unit";
+import { Punch } from "./weapons/meele/Punch";
 
 export const GOBLIN_SPRITE = 'goblin'
 
@@ -20,6 +21,9 @@ export class Goblin extends Unit {
       },
     )
     this.controller = 'enemy'
+    this.weapons = [
+      new Punch(this.scene),
+    ]
     this.name = 'Goblin'
   }
 }

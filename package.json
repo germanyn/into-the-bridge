@@ -28,6 +28,7 @@
     "vite": "^2.9.8"
   },
   "dependencies": {
+    "delay": "^5.0.0",
     "type-fest": "^2.18.0"
   }
 }

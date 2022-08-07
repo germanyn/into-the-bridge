@@ -1,7 +1,7 @@
+import { ALL_DIRECTIONS } from "../../constants/directions-constants"
 import MainScene from "../../scenes/GameScene"
 import { Effect } from "../effects/Effect"
 import { Tile } from "../tiles/Tile"
-import { Unit } from "../Unit"
 import { RangeType } from "./RangeType"
 
 export abstract class Weapon {
@@ -18,14 +18,9 @@ export abstract class Weapon {
 
   getTargetArea(currentTile: Tile): Tile[] {
     const origin = new Phaser.Math.Vector2(currentTile.gridX, currentTile.gridY)
-    const directions = [
-      new Phaser.Math.Vector2(-1, 0), // UP_LEFT,
-      new Phaser.Math.Vector2(0, 1), // UP_RIGHT,
-      new Phaser.Math.Vector2(1, 0), // DOWN_RIGHT,
-      new Phaser.Math.Vector2(0, -1), // DOWN_LEFT,
-    ]
-    return directions.flatMap<Tile>(direction => {
-      const target = new Phaser.Math.Vector2(currentTile.gridX, currentTile.gridY)
+    return ALL_DIRECTIONS.flatMap<Tile>(direction => {
+      const target = currentTile.point
+        .clone()
         .add(direction)
 
       const tiles: Tile[] = []

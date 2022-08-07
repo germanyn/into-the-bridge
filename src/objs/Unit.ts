@@ -1,11 +1,14 @@
+import delay from 'delay'
 import { GameObjects, Math } from "phaser"
-import { BOARD_SIZE } from "../constants"
+import { BOARD_SIZE } from "../constants/board-constants"
 import MainScene from "../scenes/GameScene"
+import { EnemyAi } from "./ai/EnemyAi"
 import { LifeBar } from "./displays/LifeBar"
 import { IsometricSprite, SpriteParams } from "./IsometricSprite"
 import { PathNode } from "./path-finding/PathNode"
 import { OutlinePipeline } from "./shaders/OutlinePipeline"
 import { Tile } from "./tiles/Tile"
+import { UnitAction } from "./UnitAction"
 import { Weapon } from "./weapons/Weapon"
 
 export type UnitParams = {
@@ -17,7 +20,6 @@ export type ControllerType = 'none' | 'player' | 'enemy'
 
 export abstract class Unit extends GameObjects.Container {
   declare scene: MainScene
-  selected = false
   baseLife: number
   baseMovement: number
   controller: ControllerType = 'none'
@@ -54,20 +56,20 @@ export abstract class Unit extends GameObjects.Container {
     })
     this.add(this.lifeBar)
   }
+
   select() {
-    if (this.selected) return
-    this.selected = true
     this.sprite.setPipeline(OutlinePipeline.KEY)
     this.sprite.pipeline.set2f(
       "uTextureSize",
       this.sprite.texture.getSourceImage().width,
       this.sprite.texture.getSourceImage().height
     )
+    const ai = new EnemyAi(this.scene)
+    const best = ai.chooseBestAction(this)
+    console.log(best)
   }
 
   deselect() {
-    if (!this.selected) return
-    this.selected = false
     this.sprite.resetPipeline()
   }
 
@@ -191,10 +193,10 @@ export abstract class Unit extends GameObjects.Container {
         this.setAlpha(tween.getValue())
       },
       onComplete: () => {
-        this.tile?.removeUnit()
         this.destroy()
       }
     })
+    this.scene.board.removeUnit(this)
   }
   push(direction: Phaser.Math.Vector2) {
     if (!this.tile) return
@@ -288,5 +290,60 @@ export abstract class Unit extends GameObjects.Container {
 
   set offsetY(value: this['sprite']['offsetY']) {
     this.sprite.offsetY = value
+  }
+
+  get point() {
+    return this.sprite.point
+  }
+
+  get possibleActions(): UnitAction[] {
+    const startTile = this.tile
+    if (!startTile) throw new Error('Unit is not in the scene')
+
+    const movementTiles = this.paths.map(path => {
+      const endNode = path.at(-1)
+      if (!endNode) throw new Error('No path end')
+
+      const endTile = this.scene.board.getTileAt(endNode.point)
+      if (!endTile) throw new Error('No tile for path end')
+
+      return endTile
+    })
+
+    return [
+      startTile,
+      ...movementTiles,
+    ].flatMap<UnitAction>(endTile => {
+      const attackActions = this.weapons.flatMap<UnitAction>((weapon, index) => {
+        return weapon.getTargetArea(endTile).map<UnitAction>(targetTile => {
+          return new UnitAction({
+            unit: this,
+            team: this.controller,
+            startTile,
+            endTile,
+            targetTile,
+            weaponIndex: index,
+            effects: weapon.getSkillEffect(endTile, targetTile),
+          })
+        })
+      })
+      return [
+        ...attackActions,
+        new UnitAction({
+          unit: this,
+          team: this.controller,
+          startTile,
+          endTile,
+        })
+      ]
+    })
+  }
+
+  async executeAction(action: UnitAction) {
+    this.moveToTile(action.endTile)
+    await delay(1000)
+    if (typeof action.weaponIndex === 'undefined' || !action.targetTile) return
+    this.attack(action.weaponIndex, action.targetTile)
+    await delay(1000)
   }
 }

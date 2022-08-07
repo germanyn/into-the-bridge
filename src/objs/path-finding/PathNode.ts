@@ -1,3 +1,5 @@
+import { Math } from "phaser"
+
 export class PathNode {
   gCost: number = Infinity
   hCost: number = Infinity
@@ -15,5 +17,9 @@ export class PathNode {
   }
   get y() {
     return this.coordinates[1]
+  }
+
+  get point(): Math.Vector2 {
+    return new Math.Vector2(this.x, this.y)
   }
 }

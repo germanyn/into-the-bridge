@@ -1,17 +1,20 @@
+import delay from 'delay';
 import Phaser, { GameObjects } from 'phaser';
-import { BOARD_SIZE, CENTER_X, CENTER_Y, TILE_HEIGHT, TILE_HHEIGHT, TILE_HWIDTH, TILE_WIDTH } from '../constants';
+import { BOARD_SIZE, CENTER_X, CENTER_Y, TILE_HEIGHT, TILE_HHEIGHT, TILE_HWIDTH, TILE_WIDTH } from '../constants/board-constants';
 import { Board } from '../objs/Board';
 import { Goblin } from '../objs/Goblin';
 import { Hero } from '../objs/Hero';
 import { Pillar } from '../objs/Pillar';
 import { OutlinePipeline } from '../objs/shaders/OutlinePipeline';
 import { Tile } from '../objs/tiles/Tile';
+import { Turn } from '../objs/Turn';
 import { Unit } from '../objs/Unit';
 
 export const GAME_SCENE_KEY = 'GameScene'
 
 export default class MainScene extends Phaser.Scene {
   board!: Board
+  turn: Turn
   selectedUnit?: Unit
   selectedWeaponIndex?: number = undefined
   constructor() {
@@ -19,6 +22,7 @@ export default class MainScene extends Phaser.Scene {
       key: GAME_SCENE_KEY,
       active: true,
     })
+    this.turn = new Turn(this)
   }
 
   init() {
@@ -74,8 +78,8 @@ export default class MainScene extends Phaser.Scene {
       this.selectedWeaponIndex = undefined
     })
     this.events.addListener('end-turn', () => {
+      this.turn.start()
       this.events.emit('deselect-all')
-      this.board.newTurn()
     })
     this.board = new Board(this)
     this.add.existing(this.board)
@@ -87,21 +91,24 @@ export default class MainScene extends Phaser.Scene {
       }),
       new Goblin({
         scene: this,
-        x: 3,
-        y: 2,
+        x: 7,
+        y: 4,
       }),
       new Goblin({
         scene: this,
-        x: 1,
-        y: 4,
+        x: 7,
+        y: 2,
       }),
       new Pillar({
         scene: this,
         x: 1,
-        y: 5,
+        y: 7,
       }),
     ]
     unities.forEach(unit => this.board.addUnit(unit))
+    delay(1000).then(() => {
+      this.turn.start()
+    })
   }
 
   get centerX(): number {

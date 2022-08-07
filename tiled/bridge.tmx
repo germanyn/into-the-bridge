@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.9" tiledversion="1.9.0" orientation="isometric" renderorder="right-down" width="8" height="8" tilewidth="56" tileheight="42" infinite="0" nextlayerid="7" nextobjectid="3">
+ <tileset firstgid="1" name="basic" tilewidth="56" tileheight="74" tilecount="2" columns="0">
+  <grid orientation="orthogonal" width="1" height="1"/>
+  <tile id="122">
+   <image width="56" height="74" source="../../../../../Área de Trabalho/assets/img/combat/tiles_grass/ground_0.png"/>
+  </tile>
+  <tile id="123">
+   <image width="56" height="74" source="../../../../../Área de Trabalho/assets/img/combat/tiles_grass/hole.png"/>
+  </tile>
+  <wangsets>
+   <wangset name="Unnamed Set" type="mixed" tile="-1">
+    <wangcolor name="" color="#ff0000" tile="-1" probability="1"/>
+   </wangset>
+  </wangsets>
+ </tileset>
+ <tileset firstgid="126" name="building_sheet" tilewidth="31" tileheight="40" tilecount="3" columns="3">
+  <image source="../../../../../Área de Trabalho/assets/img/combat/tiles_grass/building_sheet.png" width="93" height="40"/>
+ </tileset>
+ <tileset firstgid="129" name="mechs" tilewidth="44" tileheight="35" tilecount="3" columns="0">
+  <grid orientation="orthogonal" width="1" height="1"/>
+  <tile id="0">
+   <image width="42" height="35" source="../../../../../Área de Trabalho/assets/img/units/player/mech_punch.png"/>
+  </tile>
+  <tile id="1">
+   <image width="44" height="34" source="../../../../../Área de Trabalho/assets/img/units/player/mech_artillery.png"/>
+  </tile>
+  <tile id="2">
+   <image width="41" height="26" source="../../../../../Área de Trabalho/assets/img/units/player/mech_tank.png"/>
+  </tile>
+ </tileset>
+ <tileset firstgid="132" name="firefly" tilewidth="37" tileheight="37" tilecount="4" columns="1">
+  <image source="../../../../../Área de Trabalho/assets/img/units/aliens/firefly.png" width="37" height="148"/>
+ </tileset>
+ <tileset firstgid="136" name="indications" tilewidth="54" tileheight="41" tilecount="12" columns="0">
+  <grid orientation="orthogonal" width="1" height="1"/>
+  <tile id="0">
+   <image width="54" height="41" source="../../../../../Área de Trabalho/assets/img/combat/arrow_down.png"/>
+  </tile>
+  <tile id="1">
+   <image width="54" height="41" source="../../../../../Área de Trabalho/assets/img/combat/arrow_left.png"/>
+  </tile>
+  <tile id="6">
+   <image width="54" height="41" source="../../../../../Área de Trabalho/assets/img/combat/arrow_right.png"/>
+  </tile>
+  <tile id="7">
+   <image width="54" height="41" source="../../../../../Área de Trabalho/assets/img/combat/arrow_up.png"/>
+  </tile>
+  <tile id="8">
+   <image width="54" height="41" source="../../../../../Área de Trabalho/assets/img/combat/arrow_hit_down.png"/>
+  </tile>
+  <tile id="9">
+   <image width="54" height="41" source="../../../../../Área de Trabalho/assets/img/combat/arrow_hit_left.png"/>
+  </tile>
+  <tile id="10">
+   <image width="54" height="41" source="../../../../../Área de Trabalho/assets/img/combat/arrow_hit_right.png"/>
+  </tile>
+  <tile id="11">
+   <image width="54" height="41" source="../../../../../Área de Trabalho/assets/img/combat/arrow_hit_up.png"/>
+  </tile>
+  <tile id="12">
+   <image width="54" height="41" source="../../../../../Área de Trabalho/assets/img/combat/projectile_arrow_0.png"/>
+  </tile>
+  <tile id="13">
+   <image width="54" height="41" source="../../../../../Área de Trabalho/assets/img/combat/projectile_arrow_1.png"/>
+  </tile>
+  <tile id="14">
+   <image width="54" height="41" source="../../../../../Área de Trabalho/assets/img/combat/projectile_arrow_2.png"/>
+  </tile>
+  <tile id="15">
+   <image width="54" height="41" source="../../../../../Área de Trabalho/assets/img/combat/projectile_arrow_3.png"/>
+  </tile>
+ </tileset>
+ <layer id="1" name="ground" width="8" height="8" offsetx="0" offsety="-11">
+  <data encoding="csv">
+123,123,123,123,123,123,123,123,
+123,123,123,123,124,123,123,123,
+123,123,124,123,123,123,123,123,
+123,123,123,123,123,123,123,123,
+123,123,123,123,123,123,123,123,
+123,123,123,123,123,123,123,123,
+123,123,123,123,124,123,123,123,
+123,123,123,123,123,123,123,123
+</data>
+ </layer>
+ <layer id="2" name="buildings" width="8" height="8" offsetx="9" offsety="-6">
+  <data encoding="csv">
+126,0,0,0,0,0,0,0,
+0,0,126,0,0,0,0,0,
+0,0,0,0,0,0,0,0,
+0,126,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0
+</data>
+ </layer>
+ <layer id="3" name="mechs" width="8" height="8" offsetx="9" offsety="-11">
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,
+0,0,0,0,129,0,0,0,
+0,0,131,0,130,0,0,0,
+0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0
+</data>
+ </layer>
+ <layer id="4" name="enemies" width="8" height="8" offsetx="12" offsety="0">
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,
+0,0,0,0,0,132,0,0,
+0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,132,0,
+0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,132,0,
+0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0
+</data>
+ </layer>
+ <layer id="6" name="indications" width="8" height="8">
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,
+0,0,145,137,137,0,0,0,
+0,0,0,148,0,0,0,0,
+0,0,149,148,149,149,0,0,
+0,0,0,142,0,0,0,0,
+0,0,0,0,137,137,0,0,
+0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0
+</data>
+ </layer>
+</map>

@@ -1,4 +1,5 @@
-import { BOARD_SIZE, CENTER_X, CENTER_Y, TILE_HHEIGHT, TILE_HWIDTH } from "../constants"
+import { Math } from "phaser"
+import { BOARD_SIZE, CENTER_X, CENTER_Y, TILE_HHEIGHT, TILE_HWIDTH } from "../constants/board-constants"
 import MainScene from "../scenes/GameScene"
 
 export type SpriteParams = {
@@ -13,8 +14,6 @@ export type UnitParams = {
   baseLife?: number
   baseMovement?: number
 }
-
-export type ControllerType = 'none' | 'player' | 'enemy'
 
 export class IsometricSprite extends Phaser.GameObjects.Sprite {
   declare scene: MainScene
@@ -68,5 +67,9 @@ export class IsometricSprite extends Phaser.GameObjects.Sprite {
 
   adjustDepth() {
     this.depth = this.gridX + this.gridY * BOARD_SIZE
+  }
+
+  get point(): Math.Vector2 {
+    return new Math.Vector2(this.gridX, this.gridY)
   }
 }

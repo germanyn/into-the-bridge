@@ -1,10 +1,11 @@
-import { BOARD_SIZE } from "../constants"
+import { Math } from "phaser"
+import { BOARD_SIZE } from "../constants/board-constants"
 import MainScene from "../scenes/GameScene"
 import { PathFinding } from "./path-finding/PathFinding"
 import { PathNode } from "./path-finding/PathNode"
 import { Floor } from "./tiles/Floor"
 import { Tile } from "./tiles/Tile"
-import { Unit } from "./Unit"
+import { ControllerType, Unit } from "./Unit"
 
 export class Board extends Phaser.GameObjects.Group {
   declare scene: MainScene
@@ -35,6 +36,11 @@ export class Board extends Phaser.GameObjects.Group {
     floor.addUnit(unit)
   }
 
+  removeUnit(unit: Unit) {
+    this.unities = this.unities.filter(boardUnit => boardUnit !== unit)
+    unit.tile?.removeUnit()
+  }
+
   paintMoves(tile: Tile) {
     if (!tile.unit) return
     const unit = tile.unit
@@ -56,7 +62,7 @@ export class Board extends Phaser.GameObjects.Group {
   getTileAt(point: Phaser.Math.Vector2 | [number, number]): Tile | undefined {
     const tile = point instanceof Phaser.Math.Vector2
       ? this.tiles[point.x]?.[point.y]
-      : this.tiles[point[0]][point[1]]
+      : this.tiles[point[0]]?.[point[1]]
     return tile
   }
 
@@ -78,5 +84,22 @@ export class Board extends Phaser.GameObjects.Group {
 
   newTurn() {
     this.unities.forEach(unit => unit.newTurn())
+  }
+
+  getClosestUnitDistance(origin: Math.Vector2, notControlledBy: ControllerType): number | undefined {
+    let lowestDistance: number | undefined
+    this.unities.forEach(unit => {
+      if (unit.controller === notControlledBy) return
+      const distance = unit.point
+        .clone()
+        .distance(origin)
+      if (typeof lowestDistance === 'undefined') {
+        lowestDistance = distance
+        return
+      }
+      if (distance >= lowestDistance) return
+      lowestDistance = distance
+    })
+    return lowestDistance
   }
 }
