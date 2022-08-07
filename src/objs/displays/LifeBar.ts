@@ -72,7 +72,7 @@ export class LifeBar extends GameObjects.Graphics {
     // Life bar sections
     for (let i = 1; i < this.max; ++i) {
       const offsetX = Math.ceil(FILL_WIDTH / this.max * i )
-      this.lineStyle(1, 0x000000);
+      this.lineStyle(2, 0x000000);
       this.lineBetween(
         fillStartX + offsetX,
         fillStartY,
