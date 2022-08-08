@@ -20,8 +20,8 @@ export class Punch extends Weapon {
 
   getSkillEffect(originTile: Tile, targetTile: Tile): Effect[] {
     if (!originTile) return []
-    const origin = new Phaser.Math.Vector2(originTile.gridX, originTile.gridY)
-    const target = new Phaser.Math.Vector2(targetTile.gridX, targetTile.gridY)
+    const origin = originTile.point
+    const target = targetTile.point
     const direction = target.subtract(origin.clone()).normalize()
     return [
       new DirectDamageEffect(targetTile, this.damage),
