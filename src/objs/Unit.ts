@@ -1,4 +1,3 @@
-import delay from 'delay'
 import { GameObjects, Math } from "phaser"
 import { BOARD_SIZE } from "../constants/board-constants"
 import MainScene from "../scenes/GameScene"
@@ -330,7 +329,7 @@ export abstract class Unit extends GameObjects.Container {
             team: this.controller,
             startTile,
             endTile,
-            targetTile,
+            target: targetTile.point,
             weaponIndex: index,
             effects: weapon.getSkillEffect(endTile, targetTile),
           })
@@ -350,7 +349,9 @@ export abstract class Unit extends GameObjects.Container {
 
   async executeAction(action: UnitAction) {
     await this.moveToTile(action.endTile)
-    if (typeof action.weaponIndex === 'undefined' || !action.targetTile) return
-    await this.attack(action.weaponIndex, action.targetTile)
+    if (typeof action.weaponIndex === 'undefined' || !action.target) return
+    const tileToAttack = this.scene.board.getTileAt(action.target)
+    if (!tileToAttack) return
+    await this.attack(action.weaponIndex, tileToAttack)
   }
 }

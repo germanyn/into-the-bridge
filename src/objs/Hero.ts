@@ -24,6 +24,7 @@ export class Hero extends Unit {
     this.controller = 'player'
     this.weapons = [
       new Punch(this.scene),
+      new Punch(this.scene),
     ]
     this.name = 'Hero'
   }

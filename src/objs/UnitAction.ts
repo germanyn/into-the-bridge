@@ -7,7 +7,7 @@ export interface UnitActionParams {
   team: ControllerType
   startTile: Tile
   endTile: Tile
-  targetTile?: Tile
+  target?: Phaser.Math.Vector2
   weaponIndex?: number
   effects?: Effect[]
 }

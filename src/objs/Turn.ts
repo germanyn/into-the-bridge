@@ -44,7 +44,7 @@ export class Turn {
           if (!action) {
             console.log('no action for ' + enemy.name)
           } else {
-            console.log(`goblin -> ${action.targetTile?.gridX},${action.targetTile?.gridY}`)
+            console.log(`goblin -> ${action.target?.x},${action.target?.y}`)
             await enemy.executeAction(action)
           }
         }

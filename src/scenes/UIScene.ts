@@ -1,10 +1,12 @@
 import { Floor } from "../objs/tiles/Floor";
 import { Unit } from "../objs/Unit";
+import { WeaponButton } from "../ui/WeaponButton";
 import { GAME_SCENE_KEY } from "./GameScene";
 
 export const UI_SCENE_KEY = 'UIScene'
 
 export class UIScene extends Phaser.Scene {
+  weaponButtons: WeaponButton[] = []
   score = 0
   constructor() {
     super({
@@ -22,59 +24,59 @@ export class UIScene extends Phaser.Scene {
     const description = this.add.text(10, 24, '', { font: '10px Arial' });
     let selectedUnit: Unit | undefined = undefined
 
-    const game = this.scene.get(GAME_SCENE_KEY);
-  
-    let attackToggled = false
-    const attackButton = this.add
-      .image(24, this.renderer.height - 24, '')
-      .setVisible(false)
-      .setInteractive()
-      .on(Phaser.Input.Events.POINTER_DOWN, () => {
-        if (!selectedUnit) return
-        if (!selectedUnit.canAttack) return
-        if (attackToggled) return
-        game.events.emit('toggle-attack', 0)
-      })
-    const endTurnButton = this.add
-      .text(this.renderer.width - 68, this.renderer.height - 24, 'End Turn', { font: 'bold 14px Arial', align: 'left' })
-      .setInteractive()
-      .setVisible(true)
-      .on(Phaser.Input.Events.POINTER_DOWN, () => {
-        game.events.emit('end-turn', 0)
-      })
+    const game = this.scene.get(GAME_SCENE_KEY)
 
     game.events.on('detail-tile', (tile: Floor) => {
       name.setText(tile.name)
       description.setText(tile.description)
       name.visible = true
       description.visible = true
-      selectedUnit = tile.unit
+      const { unit } = tile
+      selectedUnit = unit
+      this.removeWeaponsUi()
       if (
-        selectedUnit &&
-        selectedUnit.controller === 'player'
+        unit &&
+        unit.controller === 'player'
       )  {
-        attackButton.setTexture(selectedUnit.weapons[0].icon)
-        if (!selectedUnit.canAttack) {
-          attackButton.setTint(0x444444)
-        }  else {
-          attackButton.clearTint
-        }
-        attackButton.visible = true
-      } else {
-        attackButton.visible = false
+        unit.weapons.forEach((weapon, index) => {
+          this.weaponButtons.push(
+            new WeaponButton(
+              [
+                this,
+                index * WeaponButton.WIDTH,
+                this.renderer.height,
+              ],
+              unit,
+              weapon,
+              unit.canAttack,
+              () => game.events.emit('toggle-attack', index)
+            ).setOrigin(0, 1)
+          )
+        })
       }
     })
 
-    game.events.on('unit-attacked', (unit: Unit) => {
-      attackToggled = false
-      attackButton.setTint(0x444444)
+    game.events.on('unit-attacked', () => {
+      this.updateWeaponsUi()
     })
 
     game.events.on('background-click', () => {
       name.visible = false
       description.visible = false
-      attackButton.visible = false
-      attackToggled = false
+      this.removeWeaponsUi()
+    })
+  }
+
+  removeWeaponsUi() {
+    this.weaponButtons.forEach(button => {
+      button.destroy()
+    })
+    this.weaponButtons.splice(1)
+  }
+
+  updateWeaponsUi() {
+    this.weaponButtons.forEach(button => {
+      button.updateState()
     })
   }
 }
