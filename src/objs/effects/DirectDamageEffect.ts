@@ -8,9 +8,9 @@ export class DirectDamageEffect extends Effect {
   ) {
     super(tile)
   }
-  apply() {
+  async apply() {
     if (!this.tile) return
     if (!this.tile.unit) return
-    this.tile.unit.hurt(this.amount)
+    return this.tile.unit.hurt(this.amount)
   }
 }

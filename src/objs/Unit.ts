@@ -97,7 +97,7 @@ export abstract class Unit extends GameObjects.Container {
     return paths
   }
 
-  moveToTile(tile: Tile): boolean {
+  async moveToTile(tile: Tile): Promise<boolean> {
     const path = this.paths.find(path => {
       return this.scene.board.getPathTile(path) === tile
     })
@@ -129,9 +129,13 @@ export abstract class Unit extends GameObjects.Container {
     }
     this.tile?.removeUnit()
     tile.addUnit(this)
-    timeline.play()
     this.movedThisTurn = true
-    return true
+    return new Promise(resolve => {
+      timeline.once(Phaser.Tweens.Events.TIMELINE_COMPLETE, () => {
+        resolve(true)
+      })
+      timeline.play()
+    })
   }
 
 
@@ -162,39 +166,42 @@ export abstract class Unit extends GameObjects.Container {
     return weapon.getTargetArea(this.tile)
   }
 
-  attack(weaponIndex: number, target: Tile): boolean {
+  async attack(weaponIndex: number, target: Tile): Promise<boolean> {
     const weapon = this.weapons.at(weaponIndex)
     if (!weapon) throw new Error(`No weapon at index ${weaponIndex}`)
     if (!this.tile) throw new Error(`Unit is not in the board`)
-    const attacked = weapon.attack(this.tile, target)
+    const attacked = await weapon.attack(this.tile, target)
     if (!attacked) return false
     this.attackedThisTurn = true
     return true
   }
 
-  hurt(damage: number) {
+  async hurt(damage: number) {
     this.life = damage >= this.life
       ? 0
       : this.life - damage
-    if (!this.life) this.die()
     this.lifeBar.current = this.life
     this.lifeBar.draw()
+    if (!this.life) await this.die()
   }
-  die() {
-    this.scene.tweens.addCounter({
-      from: 1,
-      to: 0,
-      duration: 500,
-      onUpdate: (tween) => {
-        this.setAlpha(tween.getValue())
-      },
-      onComplete: () => {
-        this.destroy()
-      }
+  async die() {
+    return new Promise<void>(resolve => {
+      this.scene.board.removeUnit(this)
+      this.scene.tweens.addCounter({
+        from: 1,
+        to: 0,
+        duration: 500,
+        onUpdate: (tween) => {
+          this.setAlpha(tween.getValue())
+        },
+        onComplete: () => {
+          this.destroy()
+          resolve()
+        }
+      })
     })
-    this.scene.board.removeUnit(this)
   }
-  push(direction: Phaser.Math.Vector2) {
+  async push(direction: Phaser.Math.Vector2) {
     if (!this.tile) return
     if (!this.canBePushed) return
     const { gridX, gridY } = this.tile
@@ -240,15 +247,21 @@ export abstract class Unit extends GameObjects.Container {
         }
       })
     }
-    timeline.play()
-    
-    if (toTile.unit) {
-      toTile.unit.hurt(1)
-      this.hurt(1)
-    } else {
-      this.tile?.removeUnit()
-      toTile.addUnit(this)
-    }
+    return new Promise<void>(resolve => {
+      timeline.once(Phaser.Tweens.Events.TIMELINE_COMPLETE, async () => {
+        if (toTile.unit) {
+          await Promise.all([
+            toTile.unit.hurt(1),
+            this.hurt(1),
+          ])
+        } else {
+          this.tile?.removeUnit()
+          toTile.addUnit(this)
+        }
+        resolve()
+      })
+      timeline.play()
+    })
   }
 
   newTurn(): void {
@@ -336,10 +349,8 @@ export abstract class Unit extends GameObjects.Container {
   }
 
   async executeAction(action: UnitAction) {
-    this.moveToTile(action.endTile)
-    await delay(1000)
+    await this.moveToTile(action.endTile)
     if (typeof action.weaponIndex === 'undefined' || !action.targetTile) return
-    this.attack(action.weaponIndex, action.targetTile)
-    await delay(1000)
+    await this.attack(action.weaponIndex, action.targetTile)
   }
 }

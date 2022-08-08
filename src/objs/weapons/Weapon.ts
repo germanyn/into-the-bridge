@@ -34,13 +34,14 @@ export abstract class Weapon {
     })
   }
 
-  attack(origin: Tile, target: Tile): boolean {
+  async attack(origin: Tile, target: Tile): Promise<boolean> {
     const attackableTiles = this.getTargetArea(origin)
     if (!attackableTiles.some(attackTile => attackTile === target)) return false
     if (!target.unit) return true
-    this.getSkillEffect(origin, target).forEach(effect => {
-      effect.apply()
-    });
+    const effects = this.getSkillEffect(origin, target)
+    for (const effect of effects) {
+      await effect.apply()
+    }
     return true
   }
 

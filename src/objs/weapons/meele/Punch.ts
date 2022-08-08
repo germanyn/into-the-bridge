@@ -29,9 +29,7 @@ export class Punch extends Weapon {
     ]
   }
 
-  attack(origin: Tile, target: Tile): boolean {
-    const attacked = super.attack(origin, target)
-    if (!attacked) return false
+  async attack(origin: Tile, target: Tile): Promise<boolean> {
     const unit = origin.unit
     const direction = new Math.Vector2(target.x, target.y)
       .subtract(new Math.Vector2(origin.x, origin.y)).normalize()
@@ -39,14 +37,29 @@ export class Punch extends Weapon {
     const animationEndPoint = new Math.Vector2(direction.clone())
       .multiply({ x: 16, y: 16 })
       .add({ x: unit.x, y: unit.y })
-    this.scene.tweens.add({
+    const animation = this.scene.tweens.add({
       targets: unit,
       x: animationEndPoint.x,
       y: animationEndPoint.y,
       duration: 100,
       yoyo: true,
-    });
-    return true
+      paused: true,
+    })
+    const bouncing = new Promise<boolean>(async resolve => {
+      animation.once(Phaser.Tweens.Events.TWEEN_YOYO, async () => {
+        const success = await super.attack(origin, target)
+        resolve(success)
+      })
+    })
+    const endingAnimation = new Promise<void>(async resolve => {
+      animation.once(Phaser.Tweens.Events.TWEEN_YOYO, () => {
+        resolve()
+      })
+    })
+    animation.play()
+    const attacked = await bouncing
+    await endingAnimation
+    return attacked
   }
 
 }

@@ -4,5 +4,5 @@ export abstract class Effect {
   constructor(public tile?: Tile) {
     
   }
-  abstract apply(): void
+  abstract apply(): Promise<void>
 }

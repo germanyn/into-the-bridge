@@ -8,9 +8,9 @@ export class PushEffect extends Effect {
   ) {
     super(tile)
   }
-  apply() {
+  async apply() {
     if (!this.tile) return
     if (!this.tile.unit) return
-    this.tile.unit.push(this.direction)
+    return this.tile.unit.push(this.direction)
   }
 }

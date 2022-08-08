@@ -42,21 +42,21 @@ export default class MainScene extends Phaser.Scene {
   }
 
   create() {
-    this.events.addListener('select-tile', (tile: Tile) => {
+    this.events.addListener('select-tile', async (tile: Tile) => {
       this.events.emit('remove-tiles-paint')
       if (
         this.selectedUnit &&
         this.selectedUnit.controller === 'player'
       ) {
         if (typeof this.selectedWeaponIndex === 'number') {
-          const acted = this.selectedUnit.attack(this.selectedWeaponIndex, tile)
+          const acted = await this.selectedUnit.attack(this.selectedWeaponIndex, tile)
           this.selectedWeaponIndex = undefined
           if (acted) {
             this.events.emit('unit-attacked', this.selectedUnit)
             return
           }
         } else {
-          const acted = this.selectedUnit.moveToTile(tile)
+          const acted = await this.selectedUnit.moveToTile(tile)
           if (acted) return
         }
       }
