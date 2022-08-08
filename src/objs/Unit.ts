@@ -2,7 +2,6 @@ import delay from 'delay'
 import { GameObjects, Math } from "phaser"
 import { BOARD_SIZE } from "../constants/board-constants"
 import MainScene from "../scenes/GameScene"
-import { EnemyAi } from "./ai/EnemyAi"
 import { LifeBar } from "./displays/LifeBar"
 import { IsometricSprite, SpriteParams } from "./IsometricSprite"
 import { PathNode } from "./path-finding/PathNode"
@@ -64,9 +63,6 @@ export abstract class Unit extends GameObjects.Container {
       this.sprite.texture.getSourceImage().width,
       this.sprite.texture.getSourceImage().height
     )
-    const ai = new EnemyAi(this.scene)
-    const best = ai.chooseBestAction(this)
-    console.log(best)
   }
 
   deselect() {
