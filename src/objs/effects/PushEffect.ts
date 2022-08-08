@@ -6,7 +6,7 @@ export class PushEffect extends Effect {
     public tile: Tile,
     public direction: Phaser.Math.Vector2,
   ) {
-    super(tile)
+    super()
   }
   async apply() {
     if (!this.tile) return
