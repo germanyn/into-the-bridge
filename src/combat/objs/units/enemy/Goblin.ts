@@ -1,6 +1,6 @@
-import { SpriteParams } from "./IsometricSprite";
-import { Unit } from "./Unit";
-import { Punch } from "./weapons/meele/Punch";
+import { SpriteParams } from "../../IsometricSprite";
+import { Unit } from "../../Unit";
+import { Punch } from "../../weapons/meele/Punch";
 
 export const GOBLIN_SPRITE = 'goblin'
 

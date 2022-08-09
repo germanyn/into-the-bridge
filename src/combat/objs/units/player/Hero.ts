@@ -1,7 +1,7 @@
-import { SpriteParams } from "./IsometricSprite"
-import { Unit } from "./Unit"
-import { Punch } from "./weapons/meele/Punch"
-import { Bow } from "./weapons/ranged/Bow"
+import { SpriteParams } from "../../IsometricSprite"
+import { Unit } from "../../Unit"
+import { Punch } from "../../weapons/meele/Punch"
+import { Bow } from "../../weapons/ranged/Bow"
 
 export const HERO_SPRITE = 'hero'
 
