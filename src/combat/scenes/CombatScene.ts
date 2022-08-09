@@ -13,7 +13,7 @@ import { Unit } from '../objs/Unit';
 
 export const GAME_SCENE_KEY = 'GameScene'
 
-export default class MainScene extends Phaser.Scene {
+export default class CombatScene extends Phaser.Scene {
   board!: Board
   turn: Turn
   selectedUnit?: Unit

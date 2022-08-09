@@ -1,8 +1,8 @@
 import { GameObjects } from "phaser";
-import MainScene from "../../scenes/GameScene";
+import CombatScene from "../../scenes/CombatScene";
 
 export type LifeBarParams = {
-  scene: MainScene
+  scene: CombatScene
   x: number
   y: number
   current?: number
@@ -20,7 +20,7 @@ const OFFSET_X = WIDTH / 2
 const OFFSET_Y = HEIGHT / 2
 
 export class LifeBar extends GameObjects.Graphics {
-  scene: MainScene
+  scene: CombatScene
   current: number = 0
   max: number = 0
 

@@ -1,7 +1,7 @@
 import { GameObjects, Math } from "phaser"
 import { BOARD_SIZE } from "../constants/board-constants"
 import { createSpriteMovementAnimation } from "../utils"
-import MainScene from "../scenes/GameScene"
+import CombatScene from "../scenes/CombatScene"
 import { LifeBar } from "./displays/LifeBar"
 import { IsometricSprite, SpriteParams } from "./IsometricSprite"
 import { PathNode } from "./path-finding/PathNode"
@@ -18,7 +18,7 @@ export type UnitParams = {
 export type ControllerType = 'none' | 'player' | 'enemy'
 
 export abstract class Unit extends GameObjects.Container {
-  declare scene: MainScene
+  declare scene: CombatScene
   baseLife: number
   baseMovement: number
   controller: ControllerType = 'none'

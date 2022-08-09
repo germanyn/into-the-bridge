@@ -1,5 +1,5 @@
 import { ALL_DIRECTIONS } from "../../constants/directions-constants";
-import MainScene from "../../scenes/GameScene";
+import CombatScene from "../../scenes/CombatScene";
 import { DirectDamageEffect } from "../effects/DirectDamageEffect";
 import { Unit } from "../Unit";
 import { UnitAction } from "../UnitAction";
@@ -10,7 +10,7 @@ export const SCORE_FRIENDLY_FIRE = -2
 export const SCORE_NOTHING = 0
 
 export class EnemyAi {
-  constructor(public scene: MainScene) {}
+  constructor(public scene: CombatScene) {}
 
   chooseBestAction(enemy: Unit): UnitAction | undefined {
     const possibleActions = enemy.possibleActions

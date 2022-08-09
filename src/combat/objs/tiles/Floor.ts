@@ -1,13 +1,13 @@
-import MainScene from "../../scenes/GameScene";
+import CombatScene from "../../scenes/CombatScene";
 import { Tile } from "./Tile";
 
 export const FLOOR_SPRITE = 'floor'
 
 export class Floor extends Tile {
-  declare scene: MainScene
+  declare scene: CombatScene
   name = 'Floor'
   description = 'A basic tile'
-  constructor(scene: MainScene, x: number, y: number) {
+  constructor(scene: CombatScene, x: number, y: number) {
     super(FLOOR_SPRITE, scene, x, y)
   }
 }

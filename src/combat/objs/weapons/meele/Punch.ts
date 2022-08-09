@@ -1,5 +1,5 @@
 import { Math } from "phaser";
-import MainScene from "../../../scenes/GameScene";
+import CombatScene from "../../../scenes/CombatScene";
 import { DirectDamageEffect } from "../../effects/DirectDamageEffect";
 import { Effect } from "../../effects/Effect";
 import { PushEffect } from "../../effects/PushEffect";
@@ -13,7 +13,7 @@ export class Punch extends Weapon {
   rangeType = RangeType.DIRECT
   icon = 'sword-icon'
 
-  constructor(scene: MainScene) {
+  constructor(scene: CombatScene) {
     super(scene)
     this.pathSize = 1
     this.damage = 1

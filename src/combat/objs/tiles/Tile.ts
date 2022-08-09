@@ -1,4 +1,4 @@
-import MainScene from "../../scenes/GameScene";
+import CombatScene from "../../scenes/CombatScene";
 import { IsometricSprite } from "../IsometricSprite";
 import { Unit } from "../Unit";
 
@@ -7,7 +7,7 @@ export abstract class Tile extends IsometricSprite {
   canHaveUnit = true
   abstract name: string
   abstract description: string
-  constructor(texture: string, scene: MainScene, x: number, y: number) {
+  constructor(texture: string, scene: CombatScene, x: number, y: number) {
     super(texture, {
       scene,
       x,

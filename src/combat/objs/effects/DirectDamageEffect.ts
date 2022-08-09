@@ -1,10 +1,10 @@
-import MainScene from "../../scenes/GameScene";
+import CombatScene from "../../scenes/CombatScene";
 import { Tile } from "../tiles/Tile";
 import { Effect } from "./Effect";
 
 export class DirectDamageEffect extends Effect {
   constructor(
-    scene: MainScene,
+    scene: CombatScene,
     public tile: Tile,
     public damage: number,
   ) {

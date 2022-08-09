@@ -1,6 +1,6 @@
 import { DOWN, RIGHT, UP } from "../../constants/directions-constants";
 import { createSpriteMovementAnimation } from "../../utils";
-import MainScene from "../../scenes/GameScene";
+import CombatScene from "../../scenes/CombatScene";
 import { IsometricSprite } from "../IsometricSprite";
 import { Effect } from "./Effect";
 
@@ -8,7 +8,7 @@ export type OnProjectileHitHander = (target: Phaser.Math.Vector2) => Effect[]
 
 export class ProjectileEffect extends Effect {
   constructor(
-    scene: MainScene,
+    scene: CombatScene,
     public origin: Phaser.Math.Vector2,
     public direction: Phaser.Math.Vector2,
     public onHit: OnProjectileHitHander,

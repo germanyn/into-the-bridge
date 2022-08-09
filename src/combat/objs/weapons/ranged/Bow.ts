@@ -1,4 +1,4 @@
-import MainScene from "../../../scenes/GameScene";
+import CombatScene from "../../../scenes/CombatScene";
 import { DirectDamageEffect } from "../../effects/DirectDamageEffect";
 import { Effect } from "../../effects/Effect";
 import { OnProjectileHitHander, ProjectileEffect } from "../../effects/ProjectileEffect";
@@ -13,7 +13,7 @@ export class Bow extends Weapon {
   rangeType = RangeType.PROJECTILE
   icon = 'bow-icon'
 
-  constructor(scene: MainScene) {
+  constructor(scene: CombatScene) {
     super(scene)
     this.pathSize = Infinity
     this.damage = 1

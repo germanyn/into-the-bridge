@@ -1,5 +1,5 @@
 import { ALL_DIRECTIONS } from "../../constants/directions-constants"
-import MainScene from "../../scenes/GameScene"
+import CombatScene from "../../scenes/CombatScene"
 import { Effect } from "../effects/Effect"
 import { Tile } from "../tiles/Tile"
 import { RangeType } from "./RangeType"
@@ -12,7 +12,7 @@ export abstract class Weapon {
   damage = 0
   pathSize = 0
 
-  constructor(public scene: MainScene) {}
+  constructor(public scene: CombatScene) {}
 
   getTargetArea(currentTile: Tile): Tile[] {
     const origin = new Phaser.Math.Vector2(currentTile.gridX, currentTile.gridY)

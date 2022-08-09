@@ -1,7 +1,7 @@
 import { Floor } from "../objs/tiles/Floor";
 import { Unit } from "../objs/Unit";
 import { WeaponButton } from "../ui/WeaponButton";
-import { GAME_SCENE_KEY } from "./GameScene";
+import { GAME_SCENE_KEY } from "./CombatScene";
 
 export const UI_SCENE_KEY = 'UIScene'
 

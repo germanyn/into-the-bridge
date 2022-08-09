@@ -1,6 +1,6 @@
 import { Math } from "phaser"
 import { BOARD_SIZE } from "../constants/board-constants"
-import MainScene from "../scenes/GameScene"
+import CombatScene from "../scenes/CombatScene"
 import { PathFinding } from "./path-finding/PathFinding"
 import { PathNode } from "./path-finding/PathNode"
 import { Floor } from "./tiles/Floor"
@@ -8,11 +8,11 @@ import { Tile } from "./tiles/Tile"
 import { ControllerType, Unit } from "./Unit"
 
 export class Board extends Phaser.GameObjects.Group {
-  declare scene: MainScene
+  declare scene: CombatScene
   private tiles: Floor[][]
   unities: Unit[] = []
 
-  constructor(scene: MainScene) {
+  constructor(scene: CombatScene) {
     super(scene)
     this.tiles = Array.from(Array(BOARD_SIZE), (_, x) => {
       return Array.from(Array(BOARD_SIZE), (_, y) => {

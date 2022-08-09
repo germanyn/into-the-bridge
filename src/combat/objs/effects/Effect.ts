@@ -1,7 +1,7 @@
-import MainScene from "../../scenes/GameScene";
+import CombatScene from "../../scenes/CombatScene";
 
 export abstract class Effect {
-  constructor(public scene: MainScene) {}
+  constructor(public scene: CombatScene) {}
 
   abstract apply(): Promise<void>
 }

@@ -1,4 +1,4 @@
-import MainScene from "../scenes/GameScene"
+import CombatScene from "../scenes/CombatScene"
 import { EnemyAi } from "./ai/EnemyAi"
 
 export type PhaseType =
@@ -14,7 +14,7 @@ export class Turn {
     'Do Actions',
   ]
 
-  constructor(public scene: MainScene) {}
+  constructor(public scene: CombatScene) {}
 
   phaseIndex = 0
 

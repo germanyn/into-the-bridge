@@ -1,9 +1,9 @@
 import { Math } from "phaser"
 import { BOARD_SIZE, CENTER_X, CENTER_Y, TILE_HHEIGHT, TILE_HWIDTH } from "../constants/board-constants"
-import MainScene from "../scenes/GameScene"
+import CombatScene from "../scenes/CombatScene"
 
 export type SpriteParams = {
-  scene: MainScene
+  scene: CombatScene
   x: number
   y: number
   offsetX?: number
@@ -17,7 +17,7 @@ export type UnitParams = {
 }
 
 export class IsometricSprite extends Phaser.GameObjects.Sprite {
-  declare scene: MainScene
+  declare scene: CombatScene
   offsetX: number
   offsetY: number
   gridX: number
