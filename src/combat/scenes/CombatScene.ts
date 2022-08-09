@@ -11,6 +11,7 @@ import { Tile } from '../objs/tiles/Tile';
 import { Turn } from '../objs/Turn';
 import { Unit } from '../objs/Unit';
 import { Archer } from '../objs/units/enemy/Archer';
+import { createPallete } from '../utils';
 
 export const GAME_SCENE_KEY = 'GameScene'
 
@@ -45,10 +46,32 @@ export default class CombatScene extends Phaser.Scene {
       frameWidth: 96,
       frameHeight: 96,
     });
-    this.load.image('archer', 'assets/archer/Archer.png');
+    this.load.spritesheet('archer', 'assets/archer/1.png', {
+      frameWidth: 25,
+    });
+    this.load.image('archer-pallete', 'assets/archer/pallete.png')
   }
 
   create() {
+    console.log('passei aqui')
+    createPallete(this, {
+      paletteKey: 'archer-pallete',
+      paletteNames: ['blue', 'red'],
+      spriteSheet: {
+        key: 'archer',
+        frameHeight: 35,
+        frameWidth: 25,
+      },
+      animations: [
+        {
+          key: 'idle',
+          frameRate: 0,
+          startFrame: 0,
+          endFrame: 0,
+        },
+      ]
+    })
+
     this.events.addListener('select-tile', async (tile: Tile) => {
       this.events.emit('remove-tiles-paint')
       if (

@@ -1,6 +1,5 @@
 import { SpriteParams } from "../../IsometricSprite"
 import { Unit } from "../../Unit"
-import { Punch } from "../../weapons/meele/Punch"
 import { Bow } from "../../weapons/ranged/Bow"
 
 export const ARCHER_SPRITE = 'archer'
@@ -15,6 +14,7 @@ export class Archer extends Unit {
         ...spriteParams,
         y: spriteParams.y,
         offsetY: -16,
+        frame: 0,
       },
       {
         baseLife: 1,
@@ -26,6 +26,6 @@ export class Archer extends Unit {
       new Bow(this.scene),
     ]
     this.name = 'Archer'
-    this.sprite.flipX = true
+    this.sprite.anims.play('archer-blue-idle')
   }
 }
