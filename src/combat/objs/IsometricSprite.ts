@@ -41,32 +41,6 @@ export class IsometricSprite extends Phaser.GameObjects.Sprite {
     this.adjustDepth()
   }
 
-  setGridX(gridX: number) {
-    this.setX(this.getXByGridX(gridX))
-  }
-
-  setGridY(gridY: number) {
-    this.setY(this.getYByGridY(gridY))
-  }
-
-  getXByGridX(gridX: number, {
-    x = this.x,
-    y = this.y,
-    offsetX = this.offsetX,
-  }: Partial<SpriteParams> = {}) {
-    const tx = (x - y) * TILE_HWIDTH + CENTER_X
-    return tx + offsetX
-  }
-
-  getYByGridY(gridY: number, {
-    x = this.x,
-    y = this.y,
-    offsetY = this.offsetY,
-  }: Partial<SpriteParams> = {}) {
-    const ty = (x + y) * TILE_HHEIGHT + CENTER_Y
-    return ty + offsetY
-  }
-
   adjustDepth() {
     this.depth = IsometricSprite.calculatePositionDepth(this.gridX, this.gridY)
   }
@@ -76,6 +50,6 @@ export class IsometricSprite extends Phaser.GameObjects.Sprite {
   }
 
   static calculatePositionDepth(x: number, y: number) {
-    return x + y * BOARD_SIZE
+    return x + (BOARD_SIZE - y) * BOARD_SIZE
   }
 }

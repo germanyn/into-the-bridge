@@ -132,8 +132,9 @@ export default class CombatScene extends Phaser.Scene {
       gridX = point.x
       gridY = point.y
     }
-    const tx = (gridX - gridY) * TILE_HWIDTH + CENTER_X + this.centerX
-    const ty = (gridX + gridY) * TILE_HHEIGHT + CENTER_Y + this.centerY
+    const posY = BOARD_SIZE - gridY - 1
+    const tx = (gridX - posY) * TILE_HWIDTH + CENTER_X + this.centerX
+    const ty = (gridX + posY) * TILE_HHEIGHT + CENTER_Y + this.centerY
     return [tx, ty]
   }
   createSpriteMovementAnimation(
