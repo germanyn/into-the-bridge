@@ -11,6 +11,7 @@ export class Punch extends Weapon {
   name = 'Punch'
   description = 'Damage target and pushs'
   rangeType = RangeType.DIRECT
+  icon = 'sword-icon'
 
   constructor(scene: MainScene) {
     super(scene)
@@ -24,8 +25,8 @@ export class Punch extends Weapon {
     const target = targetTile.point
     const direction = target.subtract(origin.clone()).normalize()
     return [
-      new DirectDamageEffect(targetTile, this.damage),
-      new PushEffect(targetTile, direction),
+      new DirectDamageEffect(this.scene, targetTile, this.damage),
+      new PushEffect(this.scene, targetTile, direction),
     ]
   }
 

@@ -8,6 +8,7 @@ export type SpriteParams = {
   y: number
   offsetX?: number
   offsetY?: number
+  frame?: number
 }
 
 export type UnitParams = {
@@ -28,9 +29,10 @@ export class IsometricSprite extends Phaser.GameObjects.Sprite {
     y,
     offsetX = 0,
     offsetY = 0,
+    frame,
   }: SpriteParams) {
     const [tx, ty] = scene.calculateTilePosition([x, y])
-    super(scene, tx + offsetX, ty + offsetY, textureName)
+    super(scene, tx + offsetX, ty + offsetY, textureName, frame)
     this.offsetX = offsetX
     this.offsetY = offsetY
     this.gridX = x
@@ -66,10 +68,14 @@ export class IsometricSprite extends Phaser.GameObjects.Sprite {
   }
 
   adjustDepth() {
-    this.depth = this.gridX + this.gridY * BOARD_SIZE
+    this.depth = IsometricSprite.calculatePositionDepth(this.gridX, this.gridY)
   }
 
   get point(): Math.Vector2 {
     return new Math.Vector2(this.gridX, this.gridY)
+  }
+
+  static calculatePositionDepth(x: number, y: number) {
+    return x + y * BOARD_SIZE
   }
 }

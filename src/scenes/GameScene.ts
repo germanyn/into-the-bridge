@@ -1,5 +1,5 @@
 import delay from 'delay';
-import Phaser, { GameObjects } from 'phaser';
+import Phaser from 'phaser';
 import { BOARD_SIZE, CENTER_X, CENTER_Y, TILE_HEIGHT, TILE_HHEIGHT, TILE_HWIDTH, TILE_WIDTH } from '../constants/board-constants';
 import { Board } from '../objs/Board';
 import { Goblin } from '../objs/Goblin';
@@ -39,6 +39,10 @@ export default class MainScene extends Phaser.Scene {
     this.load.image('hero', 'assets/hero/Individual Sprites/adventurer-idle-00.png');
     this.load.image('pillar', 'assets/tavern/individual-walls/tavern-walls (65).png');
     this.load.image('goblin', 'assets/goblin_32/tile008.png');
+    this.load.spritesheet('arrow', 'assets/combat/Arrow.png', {
+      frameWidth: 96,
+      frameHeight: 96,
+    });
   }
 
   create() {
@@ -119,7 +123,14 @@ export default class MainScene extends Phaser.Scene {
     return (this.renderer.height - BOARD_SIZE * TILE_HEIGHT) / 2
   }
 
-  calculateTilePosition([gridX, gridY]: [number, number]): [number, number] {
+  calculateTilePosition(point: [number, number] | Phaser.Math.Vector2): [number, number] {
+    let gridX: number, gridY: number
+    if (Array.isArray(point)) {
+      ;[gridX, gridY] = point
+    } else {
+      gridX = point.x
+      gridY = point.y
+    }
     const tx = (gridX - gridY) * TILE_HWIDTH + CENTER_X + this.centerX
     const ty = (gridX + gridY) * TILE_HHEIGHT + CENTER_Y + this.centerY
     return [tx, ty]

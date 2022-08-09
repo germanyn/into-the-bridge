@@ -16,13 +16,22 @@ export class UIScene extends Phaser.Scene {
   }
 
   preload() {
-    this.load.image('attack-icon', 'assets/Icons/001-Weapon01.png')
+    this.load.image('sword-icon', 'assets/Icons/001-Weapon01.png')
+    this.load.image('bow-icon', 'assets/Icons/005-Weapon05.png')
   }
 
   create() {
     const name = this.add.text(10, 10, '', { font: 'bold 14px Arial' });
     const description = this.add.text(10, 24, '', { font: '10px Arial' });
     let selectedUnit: Unit | undefined = undefined
+
+    this.add
+      .text(this.renderer.width - 68, this.renderer.height - 24, 'End Turn', { font: 'bold 14px Arial', align: 'left' })
+      .setInteractive()
+      .setVisible(true)
+      .on(Phaser.Input.Events.POINTER_DOWN, () => {
+        game.events.emit('end-turn', 0)
+      })
 
     const game = this.scene.get(GAME_SCENE_KEY)
 

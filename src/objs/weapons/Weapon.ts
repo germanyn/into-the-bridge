@@ -8,13 +8,11 @@ export abstract class Weapon {
   abstract name: string
   abstract description: string
   abstract rangeType: RangeType
-  icon: string
+  abstract icon: string
   damage = 0
   pathSize = 0
 
-  constructor(public scene: MainScene) {
-    this.icon = 'attack-icon'
-  }
+  constructor(public scene: MainScene) {}
 
   getTargetArea(currentTile: Tile): Tile[] {
     const origin = new Phaser.Math.Vector2(currentTile.gridX, currentTile.gridY)
@@ -29,6 +27,10 @@ export abstract class Weapon {
         if (!tile) return tiles
         tiles.push(tile)
         target.add(direction)
+        if (
+          this.rangeType === RangeType.PROJECTILE &&
+          tile.unit
+        ) break
       }
       return tiles
     })

@@ -1,5 +1,6 @@
 import { GameObjects, Math } from "phaser"
 import { BOARD_SIZE } from "../constants/board-constants"
+import { createSpriteMovementAnimation } from "../game/utils"
 import MainScene from "../scenes/GameScene"
 import { LifeBar } from "./displays/LifeBar"
 import { IsometricSprite, SpriteParams } from "./IsometricSprite"
@@ -101,31 +102,39 @@ export abstract class Unit extends GameObjects.Container {
       return this.scene.board.getPathTile(path) === tile
     })
     if (!path) return false
-    const timeline = this.scene.tweens.createTimeline()
     const [firstNode, ...otherNodes] = path
-    let previousTile = this.scene.board.getTileAt([firstNode.x, firstNode.y])
-    for (const node of otherNodes) {
-      const currentTile = previousTile
-      const toTile = this.scene.board.getTileAt([node.x, node.y])
-      if (!toTile) throw new Error(`Can't move to a tile that not exists`)
-      const animationPath = new Phaser.Curves.Path(this.x, this.y)
-      const [newX, newY] = this.scene.calculateTilePosition(node.coordinates)
-      animationPath.lineTo(newX + this.offsetX, newY + this.offsetY)
-      timeline.add({
-        targets: this,
-        x: newX + this.offsetX,
-        y: newY + this.offsetY,
-        onStart: () => {
-          if (!currentTile || toTile.depth < currentTile.depth ) return
-          this.depth = toTile.depth +1
-        },
-        onComplete: () => {
-          this.depth = toTile.depth + 1
-        },
+    // const timeline = this.scene.tweens.createTimeline()
+    // let previousTile = this.scene.board.getTileAt([firstNode.x, firstNode.y])
+    // for (const node of otherNodes) {
+    //   const currentTile = previousTile
+    //   const toTile = this.scene.board.getTileAt([node.x, node.y])
+    //   if (!toTile) throw new Error(`Can't move to a tile that not exists`)
+    //   const [newX, newY] = this.scene.calculateTilePosition(node.coordinates)
+    //   timeline.add({
+    //     targets: this,
+    //     x: newX + this.offsetX,
+    //     y: newY + this.offsetY,
+    //     onStart: () => {
+    //       if (!currentTile || toTile.depth < currentTile.depth ) return
+    //       this.depth = toTile.depth +1
+    //     },
+    //     onComplete: () => {
+    //       this.depth = toTile.depth + 1
+    //     },
+    //     duration: 175,
+    //   })
+    //   previousTile = toTile
+    // }
+    const vector2Path = path.slice(1)
+      .map(node => new Math.Vector2(node.x, node.y))
+    const timeline = createSpriteMovementAnimation(
+      this,
+      vector2Path,
+      {
         duration: 175,
-      })
-      previousTile = toTile
-    }
+        
+      },
+    )
     this.tile?.removeUnit()
     tile.addUnit(this)
     this.movedThisTurn = true
