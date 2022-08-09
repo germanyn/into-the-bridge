@@ -10,6 +10,7 @@ import { OutlinePipeline } from '../objs/shaders/OutlinePipeline';
 import { Tile } from '../objs/tiles/Tile';
 import { Turn } from '../objs/Turn';
 import { Unit } from '../objs/Unit';
+import { Archer } from '../objs/units/enemy/Archer';
 
 export const GAME_SCENE_KEY = 'GameScene'
 
@@ -44,6 +45,7 @@ export default class CombatScene extends Phaser.Scene {
       frameWidth: 96,
       frameHeight: 96,
     });
+    this.load.image('archer', 'assets/archer/Archer.png');
   }
 
   create() {
@@ -99,7 +101,7 @@ export default class CombatScene extends Phaser.Scene {
         x: 7,
         y: 4,
       }),
-      new Goblin({
+      new Archer({
         scene: this,
         x: 7,
         y: 2,

@@ -25,5 +25,6 @@ export class Goblin extends Unit {
       new Punch(this.scene),
     ]
     this.name = 'Goblin'
+    this.sprite.flipX = true
   }
 }

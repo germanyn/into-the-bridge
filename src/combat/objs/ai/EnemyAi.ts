@@ -1,6 +1,7 @@
 import { ALL_DIRECTIONS } from "../../constants/directions-constants";
 import CombatScene from "../../scenes/CombatScene";
 import { DirectDamageEffect } from "../effects/DirectDamageEffect";
+import { ProjectileEffect } from "../effects/ProjectileEffect";
 import { Unit } from "../Unit";
 import { UnitAction } from "../UnitAction";
 
@@ -52,6 +53,23 @@ export class EnemyAi {
             score += SCORE_DAMAGE_ENEMY
           } else {
             score += SCORE_FRIENDLY_FIRE
+          }
+        }
+      }
+      if (effect instanceof ProjectileEffect) {
+        const affectedPoint = effect.projectilePath.at(-1)
+        if (affectedPoint) {
+          const tile = this.scene.board.getTileAt(affectedPoint)
+          if (tile) {
+            if (!tile.unit) {
+              score += SCORE_NOTHING
+            } else {
+              if (tile.unit.controller !== action.team) {
+                score += SCORE_DAMAGE_ENEMY
+              } else {
+                score += SCORE_FRIENDLY_FIRE
+              }
+            }
           }
         }
       }
