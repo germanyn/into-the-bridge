@@ -4,6 +4,7 @@ import { BOARD_SIZE, CENTER_X, CENTER_Y, TILE_HEIGHT, TILE_HHEIGHT, TILE_HWIDTH,
 import { Board } from '../objs/Board';
 import { Goblin } from '../objs/Goblin';
 import { Hero } from '../objs/Hero';
+import { IsometricSprite } from '../objs/IsometricSprite';
 import { Pillar } from '../objs/Pillar';
 import { OutlinePipeline } from '../objs/shaders/OutlinePipeline';
 import { Tile } from '../objs/tiles/Tile';
@@ -134,5 +135,38 @@ export default class MainScene extends Phaser.Scene {
     const tx = (gridX - gridY) * TILE_HWIDTH + CENTER_X + this.centerX
     const ty = (gridX + gridY) * TILE_HHEIGHT + CENTER_Y + this.centerY
     return [tx, ty]
+  }
+  createSpriteMovementAnimation(
+    sprite: Unit | IsometricSprite,
+    path: Phaser.Math.Vector2[],
+    {
+      duration = 175,
+    }: {
+      duration?: number,
+    }
+  ): Phaser.Tweens.Timeline {
+    const { scene } = sprite
+    const timeline = scene.tweens.createTimeline()
+    let previousDepth = IsometricSprite.calculatePositionDepth(sprite.gridX, sprite.gridY)
+    for (const node of path) {
+      const currentDepth = previousDepth
+      const [newX, newY] = scene.calculateTilePosition(node)
+      const newDepth = IsometricSprite.calculatePositionDepth(node.x, node.y)
+      timeline.add({
+        targets: sprite,
+        x: newX + sprite.offsetX,
+        y: newY + sprite.offsetY,
+        onStart: () => {
+          if (newDepth > currentDepth ) return
+          sprite.depth = newDepth + 1
+        },
+        onComplete: () => {
+          sprite.depth = newDepth + 1
+        },
+        duration,
+      })
+      previousDepth = currentDepth
+    }
+    return timeline
   }
 }

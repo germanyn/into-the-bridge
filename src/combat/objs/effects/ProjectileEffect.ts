@@ -1,5 +1,5 @@
 import { DOWN, RIGHT, UP } from "../../constants/directions-constants";
-import { createSpriteMovementAnimation } from "../../game/utils";
+import { createSpriteMovementAnimation } from "../../utils";
 import MainScene from "../../scenes/GameScene";
 import { IsometricSprite } from "../IsometricSprite";
 import { Effect } from "./Effect";

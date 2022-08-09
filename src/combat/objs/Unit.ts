@@ -1,6 +1,6 @@
 import { GameObjects, Math } from "phaser"
 import { BOARD_SIZE } from "../constants/board-constants"
-import { createSpriteMovementAnimation } from "../game/utils"
+import { createSpriteMovementAnimation } from "../utils"
 import MainScene from "../scenes/GameScene"
 import { LifeBar } from "./displays/LifeBar"
 import { IsometricSprite, SpriteParams } from "./IsometricSprite"

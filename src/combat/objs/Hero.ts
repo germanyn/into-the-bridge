@@ -1,5 +1,4 @@
 import { SpriteParams } from "./IsometricSprite"
-import { Tile } from "./tiles/Tile"
 import { Unit } from "./Unit"
 import { Punch } from "./weapons/meele/Punch"
 import { Bow } from "./weapons/ranged/Bow"
