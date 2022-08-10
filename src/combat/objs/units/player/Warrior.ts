@@ -7,7 +7,7 @@ export const HERO_SPRITE = 'hero'
 
 export type HeroParams = SpriteParams
 
-export class Hero extends Unit {
+export class Warrior extends Unit {
   constructor(spriteParams: HeroParams) {
     super(
       HERO_SPRITE,

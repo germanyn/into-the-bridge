@@ -3,7 +3,7 @@ import Phaser from 'phaser';
 import { BOARD_SIZE, CENTER_X, CENTER_Y, TILE_HEIGHT, TILE_HHEIGHT, TILE_HWIDTH, TILE_WIDTH } from '../constants/board-constants';
 import { Board } from '../objs/Board';
 import { Goblin } from '../objs/units/enemy/Goblin';
-import { Hero } from '../objs/units/player/Hero';
+import { Warrior } from '../objs/units/player/Warrior';
 import { IsometricSprite } from '../objs/IsometricSprite';
 import { Pillar } from '../objs/units/buildings/Pillar';
 import { OutlinePipeline } from '../objs/shaders/OutlinePipeline';
@@ -134,7 +134,7 @@ export default class CombatScene extends Phaser.Scene {
     this.board = new Board(this)
     this.add.existing(this.board)
     const unities = [
-      new Hero({
+      new Warrior({
         scene: this,
         x: 1,
         y: 2,
