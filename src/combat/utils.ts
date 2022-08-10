@@ -35,6 +35,49 @@ export function createSpriteMovementAnimation(
   return timeline
 }
 
+export function createSpriteLeapAnimation(
+  sprite: Unit | IsometricSprite,
+  node: Phaser.Math.Vector2,
+  {
+    duration = 175,
+  }: {
+    duration?: number,
+    rotate?: boolean,
+  }
+): Phaser.Tweens.Timeline {
+  const { scene } = sprite
+  const timeline = scene.tweens.createTimeline()
+  let previousDepth = IsometricSprite.calculatePositionDepth(sprite.gridX, sprite.gridY)
+
+  const [newX, newY] = scene.calculateTilePosition(node)
+  const newDepth = IsometricSprite.calculatePositionDepth(node.x, node.y)
+
+  const startPoint = new Phaser.Math.Vector2(sprite.x, sprite.y);
+  const controlPoint1 = new Phaser.Math.Vector2(sprite.x, sprite.y - 86);
+  const endPoint = new Phaser.Math.Vector2(newX + sprite.offsetX, newY + sprite.offsetY);
+  const controlPoint2 = new Phaser.Math.Vector2(newX, newY + sprite.offsetY - 86);
+  const curve = new Phaser.Curves.CubicBezier(startPoint, controlPoint1, controlPoint2, endPoint);
+
+  timeline.add({
+    targets: curve,
+    t: 1,
+    onUpdate: (tweens) => {
+      const point = curve.getPoint(tweens.progress)
+      sprite.x = point.x
+      sprite.y = point.y
+    },
+    onStart: () => {
+      if (newDepth > previousDepth) return
+      sprite.depth = newDepth + 1
+    },
+    onComplete: () => {
+      sprite.depth = newDepth + 1
+    },
+    duration,
+  })
+  return timeline
+}
+
 export type PalleteConfig = {
   paletteKey: string,                         // Palette file we're referencing.
   paletteNames: string[],   // Names for each palette to build out the names for the atlas.

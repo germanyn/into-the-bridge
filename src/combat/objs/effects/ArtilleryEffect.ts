@@ -1,5 +1,5 @@
 import { DOWN, RIGHT, UP } from "../../constants/directions-constants";
-import { createSpriteMovementAnimation } from "../../utils";
+import { createSpriteLeapAnimation, createSpriteMovementAnimation } from "../../utils";
 import CombatScene from "../../scenes/CombatScene";
 import { IsometricSprite } from "../IsometricSprite";
 import { Effect } from "./Effect";
@@ -19,6 +19,11 @@ export class ArtilleryEffect extends Effect {
   async apply() {
     const path = this.projectilePath
     if (!path.length) return
+    const lastPoint = path.at(-1)
+    if (!lastPoint) return
+    const targetTile = this.scene.board.getTileAt(lastPoint)
+    if (!targetTile) return
+
     const startPoint = this.origin.clone()
       .add(this.direction)
     const tileOffset = this.getTileOffset(this.direction)
@@ -44,11 +49,11 @@ export class ArtilleryEffect extends Effect {
     }
     this.scene.add.existing(arrow)
 
-    const animation = createSpriteMovementAnimation(
+    const animation = createSpriteLeapAnimation(
       arrow,
-      path,
+      lastPoint,
       {
-        duration: 120,
+        duration: 2000,
       },
     )
 
@@ -60,11 +65,6 @@ export class ArtilleryEffect extends Effect {
     })
     animation.play()
     await targetHitAnimation
-
-    const lastPoint = path.at(-1)
-    if (!lastPoint) return
-    const targetTile = this.scene.board.getTileAt(lastPoint)
-    if (!targetTile) return
 
     const onHitEffects = this.onHit(targetTile.point)
     for (const effect of onHitEffects) {
