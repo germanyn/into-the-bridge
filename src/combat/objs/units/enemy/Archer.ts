@@ -23,11 +23,10 @@ export class Archer extends Unit {
       {
         baseLife: 1,
         baseMovement: 2,
+        controller: 'player',
       },
     )
     this.scale = 0.6
-    this.controller = 'enemy'
-    this.sprite.flipX = true
     this.weapons = [
       new Bow(this.scene),
     ]

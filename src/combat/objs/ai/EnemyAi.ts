@@ -49,7 +49,7 @@ export class EnemyAi {
         if (!effect.tile.unit) {
           score += SCORE_NOTHING
         } else {
-          if (effect.tile.unit.controller !== action.team) {
+          if (effect.tile.unit.getController() !== action.team) {
             score += SCORE_DAMAGE_ENEMY
           } else {
             score += SCORE_FRIENDLY_FIRE
@@ -64,7 +64,7 @@ export class EnemyAi {
             if (!tile.unit) {
               score += SCORE_NOTHING
             } else {
-              if (tile.unit.controller !== action.team) {
+              if (tile.unit.getController() !== action.team) {
                 score += SCORE_DAMAGE_ENEMY
               } else {
                 score += SCORE_FRIENDLY_FIRE
@@ -87,10 +87,10 @@ export class EnemyAi {
       const facingTile = this.scene.board.getTileAt(positionAtDirection)
       if (!facingTile) continue
 
-      if (facingTile.unit && facingTile.unit.controller !== action.unit.controller) return 5
+      if (facingTile.unit && facingTile.unit.getController() !== action.unit.getController()) return 5
     }
 
-    const closestEnemy = this.scene.board.getClosestUnitDistance(action.endTile.point, action.unit.controller)
+    const closestEnemy = this.scene.board.getClosestUnitDistance(action.endTile.point, action.unit.getController())
     if (typeof closestEnemy === 'undefined') return SCORE_NOTHING
 
     return Math.max(0, (10 - closestEnemy) / 2)

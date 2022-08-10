@@ -40,7 +40,7 @@ export default class CombatScene extends Phaser.Scene {
   preload() {
     this.load.image('floor', 'assets/tavern/individual-floor-tiles/tavern-floor (1).png');
     this.load.image('pillar', 'assets/tavern/individual-walls/tavern-walls (65).png');
-    this.load.spritesheet('hero', 'assets/hero/Idle.png', {
+    this.load.spritesheet('warrior', 'assets/warrior/Idle.png', {
       frameWidth: 135,
       frameHeight: 135,
     })
@@ -68,8 +68,8 @@ export default class CombatScene extends Phaser.Scene {
       repeat: -1,
     })
     this.anims.create({
-      key: 'hero-idle',
-      frames: this.anims.generateFrameNames('hero'),
+      key: 'warrior-idle',
+      frames: this.anims.generateFrameNames('warrior'),
       frameRate: 12,
       repeat: -1,
     })
@@ -96,7 +96,7 @@ export default class CombatScene extends Phaser.Scene {
       this.events.emit('remove-tiles-paint')
       if (
         this.selectedUnit &&
-        this.selectedUnit.controller === 'player'
+        this.selectedUnit.getController() === 'player'
       ) {
         if (typeof this.selectedWeaponIndex === 'number') {
           const acted = await this.selectedUnit.attack(this.selectedWeaponIndex, tile)

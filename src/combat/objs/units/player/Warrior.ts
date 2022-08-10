@@ -3,14 +3,14 @@ import { Unit } from "../../Unit"
 import { Punch } from "../../weapons/meele/Punch"
 import { Bow } from "../../weapons/ranged/Bow"
 
-export const HERO_SPRITE = 'hero'
+export const WARRIOR_SPRITE = 'warrior'
 
-export type HeroParams = SpriteParams
+export type WarriorParams = SpriteParams
 
 export class Warrior extends Unit {
-  constructor(spriteParams: HeroParams) {
+  constructor(spriteParams: WarriorParams) {
     super(
-      HERO_SPRITE,
+      WARRIOR_SPRITE,
       {
         ...spriteParams,
         y: spriteParams.y,
@@ -19,15 +19,15 @@ export class Warrior extends Unit {
       {
         baseLife: 3,
         baseMovement: 3,
+        controller: 'player',
       },
     )
     this.scale = 0.6
-    this.controller = 'player'
     this.weapons = [
       new Punch(this.scene),
       new Bow(this.scene),
     ]
-    this.name = 'Hero'
-    this.sprite.anims.play('hero-idle')
+    this.name = 'Warrior'
+    this.sprite.anims.play('warrior-idle')
   }
 }

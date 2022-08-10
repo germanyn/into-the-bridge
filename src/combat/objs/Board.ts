@@ -44,7 +44,7 @@ export class Board extends Phaser.GameObjects.Group {
   paintMoves(tile: Tile) {
     if (!tile.unit) return
     const unit = tile.unit
-    const color = unit.controller === 'player'
+    const color = unit.getController() === 'player'
       ? 0x00ff00
       : 0xff0000
     tile.unit.paths.forEach(path => {
@@ -89,7 +89,7 @@ export class Board extends Phaser.GameObjects.Group {
   getClosestUnitDistance(origin: Math.Vector2, notControlledBy: ControllerType): number | undefined {
     let lowestDistance: number | undefined
     this.unities.forEach(unit => {
-      if (unit.controller === notControlledBy) return
+      if (unit.getController() === notControlledBy) return
       const distance = unit.point
         .clone()
         .distance(origin)

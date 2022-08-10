@@ -45,7 +45,7 @@ export class UIScene extends Phaser.Scene {
       this.removeWeaponsUi()
       if (
         unit &&
-        unit.controller === 'player'
+        unit.getController() === 'player'
       )  {
         unit.weapons.forEach((weapon, index) => {
           this.weaponButtons.push(

@@ -1,11 +1,10 @@
 import { GameObjects, Math } from "phaser"
 import { BOARD_SIZE } from "../constants/board-constants"
-import { createSpriteMovementAnimation } from "../utils"
 import CombatScene from "../scenes/CombatScene"
+import { createSpriteMovementAnimation } from "../utils"
 import { LifeBar } from "./displays/LifeBar"
 import { IsometricSprite, SpriteParams } from "./IsometricSprite"
 import { PathNode } from "./path-finding/PathNode"
-import { OutlinePipeline } from "./shaders/OutlinePipeline"
 import { Tile } from "./tiles/Tile"
 import { UnitAction } from "./UnitAction"
 import { Weapon } from "./weapons/Weapon"
@@ -13,6 +12,7 @@ import { Weapon } from "./weapons/Weapon"
 export type UnitParams = {
   baseLife?: number
   baseMovement?: number
+  controller?: ControllerType
 }
 
 export type ControllerType = 'none' | 'player' | 'enemy'
@@ -21,7 +21,7 @@ export abstract class Unit extends GameObjects.Container {
   declare scene: CombatScene
   baseLife: number
   baseMovement: number
-  controller: ControllerType = 'none'
+  private controller: ControllerType = 'none'
   movedThisTurn = false
   attackedThisTurn = false
   life: number = 0
@@ -30,10 +30,14 @@ export abstract class Unit extends GameObjects.Container {
   sprite: IsometricSprite
   lifeBar: LifeBar
 
-  constructor(textureName: string, spriteParams: SpriteParams, {
-    baseLife = 0,
-    baseMovement = 0,
-  }: UnitParams = {}) {
+  constructor(
+    textureName: string,
+    spriteParams: SpriteParams, {
+      baseLife = 0,
+      baseMovement = 0,
+      controller = 'none',
+    }: UnitParams = {},
+  ) {
     super(spriteParams.scene)
     this.baseLife = baseLife
     this.baseMovement = baseMovement
@@ -54,6 +58,7 @@ export abstract class Unit extends GameObjects.Container {
       max: this.baseLife,
     })
     this.add(this.lifeBar)
+    this.setController(controller)
   }
 
   select() {
@@ -67,6 +72,19 @@ export abstract class Unit extends GameObjects.Container {
 
   deselect() {
     this.sprite.resetPipeline()
+  }
+
+  setController(controller: ControllerType) {
+    this.controller = controller
+    if (controller === 'enemy') {
+      this.sprite.flipX = true
+    } else {
+      this.sprite.flipX = false
+    }
+  }
+
+  getController() {
+    return this.controller
   }
 
   get canMove() {

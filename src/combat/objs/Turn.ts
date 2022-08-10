@@ -37,7 +37,7 @@ export class Turn {
     switch(this.phase) {
       case 'Enemy Planning':
         const ai = new EnemyAi(this.scene)
-        const enemies = this.scene.board.unities.filter(unit => unit.controller === 'enemy')
+        const enemies = this.scene.board.unities.filter(unit => unit.getController() === 'enemy')
         for (const enemy of enemies) {
           const action = ai.chooseBestAction(enemy)
   

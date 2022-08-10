@@ -57,7 +57,7 @@ export abstract class Tile extends IsometricSprite {
   }
 
   isWalkableBy(unit: Unit) {
-    if (this.unit && this.unit.controller !== unit.controller) return false
+    if (this.unit && this.unit.getController() !== unit.getController()) return false
     return true
   }
 
