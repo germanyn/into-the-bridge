@@ -53,7 +53,7 @@ export abstract class Unit extends GameObjects.Container {
     this.lifeBar = new LifeBar({
       scene: this.scene,
       x: 0,
-      y: -18,
+      y: -24,
       current: this.life,
       max: this.baseLife,
     })

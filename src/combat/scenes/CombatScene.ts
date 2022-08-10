@@ -10,7 +10,7 @@ import { OutlinePipeline } from '../objs/shaders/OutlinePipeline';
 import { Tile } from '../objs/tiles/Tile';
 import { Turn } from '../objs/Turn';
 import { Unit } from '../objs/Unit';
-import { Archer } from '../objs/units/enemy/Archer';
+import { Archer } from '../objs/units/player/Archer';
 import { createPallete } from '../utils';
 
 export const GAME_SCENE_KEY = 'GameScene'
@@ -139,15 +139,15 @@ export default class CombatScene extends Phaser.Scene {
         x: 1,
         y: 2,
       }),
+      new Archer({
+        scene: this,
+        x: 3,
+        y: 4,
+      }),
       new Goblin({
         scene: this,
         x: 7,
         y: 4,
-      }),
-      new Archer({
-        scene: this,
-        x: 7,
-        y: 2,
       }),
       new Pillar({
         scene: this,

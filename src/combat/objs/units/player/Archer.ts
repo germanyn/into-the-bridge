@@ -9,7 +9,7 @@ export type ArcherParams = SpriteParams
 export class Archer extends Unit {
   constructor(
     spriteParams: ArcherParams,
-    color: 'blue' | 'yellow' | 'red' | 'green' = 'red'
+    color: 'blue' | 'yellow' | 'red' | 'green' = 'blue'
   ) {
     super(
       ARCHER_SPRITE,
@@ -26,7 +26,7 @@ export class Archer extends Unit {
         controller: 'player',
       },
     )
-    this.scale = 0.6
+    this.scale = 0.75
     this.weapons = [
       new Bow(this.scene),
     ]

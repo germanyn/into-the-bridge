@@ -22,10 +22,9 @@ export class Warrior extends Unit {
         controller: 'player',
       },
     )
-    this.scale = 0.6
+    this.scale = 0.75
     this.weapons = [
       new Punch(this.scene),
-      new Bow(this.scene),
     ]
     this.name = 'Warrior'
     this.sprite.anims.play('warrior-idle')

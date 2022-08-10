@@ -18,13 +18,13 @@ export class Goblin extends Unit {
       {
         baseLife: 2,
         baseMovement: 2,
+        controller: 'enemy',
       },
     )
-    this.controller = 'enemy'
     this.weapons = [
       new Punch(this.scene),
     ]
-    this.scale = 0.5
+    this.scale = 0.6
     this.name = 'Goblin'
     this.sprite.flipX = true
     this.sprite.anims.play('goblin-idle')
