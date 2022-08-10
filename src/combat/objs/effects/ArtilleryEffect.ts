@@ -52,13 +52,14 @@ export class ArtilleryEffect extends Effect {
       },
     )
 
-    await new Promise<void>(resolve => {
+    const targetHitAnimation = new Promise<void>(resolve => {
       animation.once(Phaser.Tweens.Events.TIMELINE_COMPLETE, () => {
         arrow.destroy()
         resolve()
       })
-      animation.play()
     })
+    animation.play()
+    await targetHitAnimation
 
     const lastPoint = path.at(-1)
     if (!lastPoint) return

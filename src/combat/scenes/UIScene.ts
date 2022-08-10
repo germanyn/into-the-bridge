@@ -18,6 +18,7 @@ export class UIScene extends Phaser.Scene {
   preload() {
     this.load.image('sword-icon', 'assets/Icons/001-Weapon01.png')
     this.load.image('bow-icon', 'assets/Icons/005-Weapon05.png')
+    this.load.image('wand-icon', 'assets/Icons/008-Weapon08.png')
   }
 
   create() {

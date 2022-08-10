@@ -42,7 +42,6 @@ export class ProjectileEffect extends Effect {
       arrow.setAngle(-60)
     }
     this.scene.add.existing(arrow)
-    arrow.depth = 5000
 
     const animation = createSpriteMovementAnimation(
       arrow,
