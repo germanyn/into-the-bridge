@@ -8,7 +8,7 @@ export type SpriteParams = {
   y: number
   offsetX?: number
   offsetY?: number
-  frame?: number
+  frame?: number | string
 }
 
 export type UnitParams = {

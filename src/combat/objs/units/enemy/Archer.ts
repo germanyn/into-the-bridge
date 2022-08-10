@@ -7,13 +7,17 @@ export const ARCHER_SPRITE = 'archer'
 export type ArcherParams = SpriteParams
 
 export class Archer extends Unit {
-  constructor(spriteParams: ArcherParams) {
+  constructor(
+    spriteParams: ArcherParams,
+    color: 'blue' | 'yellow' | 'red' | 'green' = 'red'
+  ) {
     super(
       ARCHER_SPRITE,
       {
         ...spriteParams,
         y: spriteParams.y,
-        offsetY: -16,
+        offsetY: -12,
+        offsetX: -4,
         frame: 0,
       },
       {
@@ -21,11 +25,13 @@ export class Archer extends Unit {
         baseMovement: 2,
       },
     )
+    this.scale = 0.6
     this.controller = 'enemy'
+    this.sprite.flipX = true
     this.weapons = [
       new Bow(this.scene),
     ]
     this.name = 'Archer'
-    this.sprite.anims.play('archer-blue-idle')
+    this.sprite.anims.play(`archer-${color}-idle`)
   }
 }

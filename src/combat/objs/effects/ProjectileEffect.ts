@@ -22,7 +22,7 @@ export class ProjectileEffect extends Effect {
       .add(this.direction)
     const tileOffset = this.getTileOffset(this.direction)
 
-    const spriteOffsetY = - 16
+    const spriteOffsetY = -8
     const arrow = new IsometricSprite('arrow', {
       scene: this.scene,
       x: startPoint.x,

@@ -49,7 +49,7 @@ export abstract class Unit extends GameObjects.Container {
     this.lifeBar = new LifeBar({
       scene: this.scene,
       x: 0,
-      y: -16,
+      y: -18,
       current: this.life,
       max: this.baseLife,
     })
@@ -57,12 +57,12 @@ export abstract class Unit extends GameObjects.Container {
   }
 
   select() {
-    this.sprite.setPipeline(OutlinePipeline.KEY)
-    this.sprite.pipeline.set2f(
-      "uTextureSize",
-      this.sprite.texture.getSourceImage().width,
-      this.sprite.texture.getSourceImage().height
-    )
+    // this.sprite.setPipeline(OutlinePipeline.KEY)
+    // this.sprite.pipeline.set2f(
+    //   "uTextureSize",
+    //   this.sprite.texture.getSourceImage().width,
+    //   this.sprite.texture.getSourceImage().height
+    // )
   }
 
   deselect() {

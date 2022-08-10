@@ -14,18 +14,20 @@ export class Hero extends Unit {
       {
         ...spriteParams,
         y: spriteParams.y,
-        offsetY: -16,
+        offsetY: -12,
       },
       {
         baseLife: 3,
         baseMovement: 3,
       },
     )
+    this.scale = 0.6
     this.controller = 'player'
     this.weapons = [
       new Punch(this.scene),
       new Bow(this.scene),
     ]
     this.name = 'Hero'
+    this.sprite.anims.play('hero-idle')
   }
 }

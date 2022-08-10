@@ -39,35 +39,55 @@ export default class CombatScene extends Phaser.Scene {
 
   preload() {
     this.load.image('floor', 'assets/tavern/individual-floor-tiles/tavern-floor (1).png');
-    this.load.image('hero', 'assets/hero/Individual Sprites/adventurer-idle-00.png');
     this.load.image('pillar', 'assets/tavern/individual-walls/tavern-walls (65).png');
-    this.load.image('goblin', 'assets/goblin_32/tile008.png');
+    this.load.spritesheet('hero', 'assets/hero/Idle.png', {
+      frameWidth: 135,
+      frameHeight: 135,
+    })
+    this.load.spritesheet('goblin', 'assets/goblin/Idle.png', {
+      frameWidth: 150,
+      frameHeight: 150,
+    })
     this.load.spritesheet('arrow', 'assets/combat/Arrow.png', {
       frameWidth: 96,
       frameHeight: 96,
-    });
-    this.load.spritesheet('archer', 'assets/archer/1.png', {
-      frameWidth: 25,
-    });
+    })
+    this.load.spritesheet('archer', 'assets/archer/Idle.png', {
+      frameWidth: 100,
+      frameHeight: 100,
+    })
     this.load.image('archer-pallete', 'assets/archer/pallete.png')
   }
 
   create() {
     console.log('passei aqui')
+    this.anims.create({
+      key: 'goblin-idle',
+      frames: this.anims.generateFrameNames('goblin'),
+      frameRate: 8,
+      repeat: -1,
+    })
+    this.anims.create({
+      key: 'hero-idle',
+      frames: this.anims.generateFrameNames('hero'),
+      frameRate: 12,
+      repeat: -1,
+    })
     createPallete(this, {
       paletteKey: 'archer-pallete',
-      paletteNames: ['blue', 'red'],
+      paletteNames: ['green', 'red', 'blue', 'yellow'],
       spriteSheet: {
         key: 'archer',
-        frameHeight: 35,
-        frameWidth: 25,
+        frameHeight: 100,
+        frameWidth: 100,
       },
       animations: [
         {
           key: 'idle',
-          frameRate: 0,
+          frameRate: 12,
           startFrame: 0,
-          endFrame: 0,
+          endFrame: 9,
+          repeat: -1,
         },
       ]
     })
