@@ -17,11 +17,10 @@ export class Archer extends Unit {
         ...spriteParams,
         y: spriteParams.y,
         offsetY: -12,
-        offsetX: -4,
         frame: 0,
       },
       {
-        baseLife: 1,
+        baseLife: 2,
         baseMovement: 2,
         controller: 'player',
       },

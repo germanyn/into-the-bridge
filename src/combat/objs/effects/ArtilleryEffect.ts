@@ -6,11 +6,12 @@ import { Effect } from "./Effect";
 
 export type OnProjectileHitHander = (target: Phaser.Math.Vector2) => Effect[]
 
-export class ProjectileEffect extends Effect {
+export class ArtilleryEffect extends Effect {
   constructor(
     scene: CombatScene,
     public origin: Phaser.Math.Vector2,
     public direction: Phaser.Math.Vector2,
+    public distance: number,
     public onHit: OnProjectileHitHander,
   ) {
     super(scene)
@@ -42,13 +43,12 @@ export class ProjectileEffect extends Effect {
       arrow.setAngle(-60)
     }
     this.scene.add.existing(arrow)
-    arrow.depth = 5000
 
     const animation = createSpriteMovementAnimation(
       arrow,
       path,
       {
-        duration: 50,
+        duration: 120,
       },
     )
 
@@ -65,13 +65,11 @@ export class ProjectileEffect extends Effect {
     const targetTile = this.scene.board.getTileAt(lastPoint)
     if (!targetTile) return
 
-    if (targetTile.unit) {
-      const onHitEffects = this.onHit(targetTile.point)
-      for (const effect of onHitEffects) {
-        await effect.apply()
-      }
-      return
+    const onHitEffects = this.onHit(targetTile.point)
+    for (const effect of onHitEffects) {
+      await effect.apply()
     }
+    return
   }
 
   getTileOffset(direction: Phaser.Math.Vector2) {
@@ -82,12 +80,12 @@ export class ProjectileEffect extends Effect {
   get projectilePath() {
     const path: Phaser.Math.Vector2[] = []
     let target = this.origin.clone()
-    while(true) {
+    for (let i = 0; i < this.distance; ++i) {
       target.add(this.direction)
       const tile = this.scene.board.getTileAt(target)
       if (!tile) return path
       path.push(target.clone())
-      if (tile.unit) return path
     }
+    return path
   }
 }

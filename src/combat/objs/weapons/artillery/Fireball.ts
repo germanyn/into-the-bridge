@@ -1,4 +1,6 @@
+import { ALL_DIRECTIONS } from "../../../constants/directions-constants";
 import CombatScene from "../../../scenes/CombatScene";
+import { ArtilleryEffect } from "../../effects/ArtilleryEffect";
 import { DirectDamageEffect } from "../../effects/DirectDamageEffect";
 import { Effect } from "../../effects/Effect";
 import { OnProjectileHitHander, ProjectileEffect } from "../../effects/ProjectileEffect";
@@ -7,11 +9,11 @@ import { Tile } from "../../tiles/Tile";
 import { RangeType } from "../RangeType";
 import { Weapon } from "../Weapon";
 
-export class Bow extends Weapon {
-  name = 'Bow'
-  description = 'Damage the first target at the direction'
-  rangeType = RangeType.PROJECTILE
-  icon = 'bow-icon'
+export class Fireball extends Weapon {
+  name = 'Fireball'
+  description = 'Damage target tile and push adjacent units'
+  rangeType = RangeType.ARTILLERY
+  icon = 'wand-icon'
 
   constructor(scene: CombatScene) {
     super(scene)
@@ -26,19 +28,39 @@ export class Bow extends Weapon {
       .clone()
       .subtract(origin)
       .normalize()
+    const distance = Math.abs(originTile.point.distance(targetTile.point))
     const onHit: OnProjectileHitHander = (target) => {
       const targetTile = this.scene.board.getTileAt(target)
       if (!targetTile) return []
+
+      const adjacentEffects: PushEffect[] = []
+      for (const direction of ALL_DIRECTIONS) {
+        const adjacentPoint = direction
+          .clone()
+          .add(target)
+        const tile = this.scene.board.getTileAt(adjacentPoint)
+        if (!tile)  continue
+
+        adjacentEffects.push(
+          new PushEffect(
+            this.scene,
+            tile,
+            direction,
+          )
+        )
+      }
+
       return [
         new DirectDamageEffect(this.scene, targetTile, this.damage),
-        new PushEffect(this.scene, targetTile, direction),
+        ...adjacentEffects,
       ]
     } 
     return [
-      new ProjectileEffect(
+      new ArtilleryEffect(
         this.scene,
         origin,
         direction,
+        distance,
         onHit,
       )
     ]

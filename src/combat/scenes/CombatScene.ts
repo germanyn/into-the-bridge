@@ -2,15 +2,16 @@ import delay from 'delay';
 import Phaser from 'phaser';
 import { BOARD_SIZE, CENTER_X, CENTER_Y, TILE_HEIGHT, TILE_HHEIGHT, TILE_HWIDTH, TILE_WIDTH } from '../constants/board-constants';
 import { Board } from '../objs/Board';
-import { Goblin } from '../objs/units/enemy/Goblin';
-import { Warrior } from '../objs/units/player/Warrior';
 import { IsometricSprite } from '../objs/IsometricSprite';
-import { Pillar } from '../objs/units/buildings/Pillar';
 import { OutlinePipeline } from '../objs/shaders/OutlinePipeline';
 import { Tile } from '../objs/tiles/Tile';
 import { Turn } from '../objs/Turn';
 import { Unit } from '../objs/Unit';
+import { Pillar } from '../objs/units/buildings/Pillar';
+import { Goblin } from '../objs/units/enemy/Goblin';
 import { Archer } from '../objs/units/player/Archer';
+import { Warrior } from '../objs/units/player/Warrior';
+import { Wizard } from '../objs/units/player/Wizard';
 import { createPallete } from '../utils';
 
 export const GAME_SCENE_KEY = 'GameScene'
@@ -56,6 +57,10 @@ export default class CombatScene extends Phaser.Scene {
       frameWidth: 100,
       frameHeight: 100,
     })
+    this.load.spritesheet('wizard', 'assets/wizard/Idle.png', {
+      frameWidth: 150,
+      frameHeight: 150,
+    })
     this.load.image('archer-pallete', 'assets/archer/pallete.png')
   }
 
@@ -70,6 +75,12 @@ export default class CombatScene extends Phaser.Scene {
     this.anims.create({
       key: 'warrior-idle',
       frames: this.anims.generateFrameNames('warrior'),
+      frameRate: 12,
+      repeat: -1,
+    })
+    this.anims.create({
+      key: 'wizard-idle',
+      frames: this.anims.generateFrameNames('wizard'),
       frameRate: 12,
       repeat: -1,
     })
@@ -134,14 +145,19 @@ export default class CombatScene extends Phaser.Scene {
     this.board = new Board(this)
     this.add.existing(this.board)
     const unities = [
-      new Warrior({
+      new Archer({
         scene: this,
         x: 1,
         y: 2,
       }),
-      new Archer({
+      new Warrior({
         scene: this,
-        x: 3,
+        x: 1,
+        y: 3,
+      }),
+      new Wizard({
+        scene: this,
+        x: 1,
         y: 4,
       }),
       new Goblin({
