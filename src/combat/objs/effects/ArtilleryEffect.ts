@@ -25,7 +25,6 @@ export class ArtilleryEffect extends Effect {
     if (!targetTile) return
 
     const startPoint = this.origin.clone()
-      .add(this.direction)
     const tileOffset = this.getTileOffset(this.direction)
 
     const spriteOffsetY = -8
@@ -53,7 +52,7 @@ export class ArtilleryEffect extends Effect {
       arrow,
       lastPoint,
       {
-        duration: 2000,
+        duration: 1500,
       },
     )
 

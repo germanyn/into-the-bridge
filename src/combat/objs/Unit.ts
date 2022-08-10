@@ -1,7 +1,7 @@
 import { GameObjects, Math } from "phaser"
 import { BOARD_SIZE } from "../constants/board-constants"
 import CombatScene from "../scenes/CombatScene"
-import { createSpriteMovementAnimation } from "../utils"
+import { createSpriteLeapAnimation, createSpriteMovementAnimation } from "../utils"
 import { LifeBar } from "./displays/LifeBar"
 import { IsometricSprite, SpriteParams } from "./IsometricSprite"
 import { PathNode } from "./path-finding/PathNode"
@@ -29,6 +29,7 @@ export abstract class Unit extends GameObjects.Container {
   weapons: Weapon[] = []
   sprite: IsometricSprite
   lifeBar: LifeBar
+  leaps = false
 
   constructor(
     textureName: string,
@@ -121,38 +122,25 @@ export abstract class Unit extends GameObjects.Container {
     })
     if (!path) return false
     const [firstNode, ...otherNodes] = path
-    // const timeline = this.scene.tweens.createTimeline()
-    // let previousTile = this.scene.board.getTileAt([firstNode.x, firstNode.y])
-    // for (const node of otherNodes) {
-    //   const currentTile = previousTile
-    //   const toTile = this.scene.board.getTileAt([node.x, node.y])
-    //   if (!toTile) throw new Error(`Can't move to a tile that not exists`)
-    //   const [newX, newY] = this.scene.calculateTilePosition(node.coordinates)
-    //   timeline.add({
-    //     targets: this,
-    //     x: newX + this.offsetX,
-    //     y: newY + this.offsetY,
-    //     onStart: () => {
-    //       if (!currentTile || toTile.depth < currentTile.depth ) return
-    //       this.depth = toTile.depth +1
-    //     },
-    //     onComplete: () => {
-    //       this.depth = toTile.depth + 1
-    //     },
-    //     duration: 175,
-    //   })
-    //   previousTile = toTile
-    // }
     const vector2Path = path.slice(1)
       .map(node => new Math.Vector2(node.x, node.y))
-    const timeline = createSpriteMovementAnimation(
-      this,
-      vector2Path,
-      {
-        duration: 175,
-        
-      },
-    )
+    const timeline = !this.leaps
+      ? createSpriteMovementAnimation(
+        this,
+        vector2Path,
+        {
+          duration: 175,
+          
+        },
+      )
+      : createSpriteLeapAnimation(
+        this,
+        vector2Path.at(-1)!,
+        {
+          duration: 1000,
+          height: 32,
+        },
+      )
     this.tile?.removeUnit()
     tile.addUnit(this)
     this.movedThisTurn = true

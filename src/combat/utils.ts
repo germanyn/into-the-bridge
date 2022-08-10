@@ -40,9 +40,10 @@ export function createSpriteLeapAnimation(
   node: Phaser.Math.Vector2,
   {
     duration = 175,
+    height = 86,
   }: {
     duration?: number,
-    rotate?: boolean,
+    height?: number,
   }
 ): Phaser.Tweens.Timeline {
   const { scene } = sprite
@@ -53,9 +54,9 @@ export function createSpriteLeapAnimation(
   const newDepth = IsometricSprite.calculatePositionDepth(node.x, node.y)
 
   const startPoint = new Phaser.Math.Vector2(sprite.x, sprite.y);
-  const controlPoint1 = new Phaser.Math.Vector2(sprite.x, sprite.y - 86);
+  const controlPoint1 = new Phaser.Math.Vector2(sprite.x, sprite.y - height);
   const endPoint = new Phaser.Math.Vector2(newX + sprite.offsetX, newY + sprite.offsetY);
-  const controlPoint2 = new Phaser.Math.Vector2(newX, newY + sprite.offsetY - 86);
+  const controlPoint2 = new Phaser.Math.Vector2(newX, newY + sprite.offsetY - height);
   const curve = new Phaser.Curves.CubicBezier(startPoint, controlPoint1, controlPoint2, endPoint);
 
   timeline.add({
@@ -67,7 +68,7 @@ export function createSpriteLeapAnimation(
       sprite.y = point.y
     },
     onStart: () => {
-      if (newDepth > previousDepth) return
+      if (newDepth < previousDepth) return
       sprite.depth = newDepth + 1
     },
     onComplete: () => {
