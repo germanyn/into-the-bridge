@@ -1,8 +1,9 @@
 import { IsometricSprite } from "./objs/IsometricSprite";
+import { Projectile } from "./objs/projectiles/Projectile";
 import { Unit } from "./objs/units/Unit";
 
 export function createSpriteMovementAnimation(
-  sprite: Unit | IsometricSprite,
+  sprite: Unit | Projectile,
   path: Phaser.Math.Vector2[],
   {
     duration = 175,
@@ -36,7 +37,7 @@ export function createSpriteMovementAnimation(
 }
 
 export function createSpriteLeapAnimation(
-  sprite: Unit | IsometricSprite,
+  sprite: Unit | Projectile,
   node: Phaser.Math.Vector2,
   {
     duration = 175,

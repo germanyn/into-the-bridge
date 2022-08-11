@@ -39,29 +39,34 @@ export default class CombatScene extends Phaser.Scene {
   }
 
   preload() {
-    this.load.image('floor', 'assets/tavern/individual-floor-tiles/tavern-floor (1).png');
-    this.load.image('pillar', 'assets/tavern/individual-walls/tavern-walls (65).png');
-    this.load.spritesheet('warrior', 'assets/warrior/Idle.png', {
+    this.load.setPath('assets')
+    this.load.image('floor', 'tavern/individual-floor-tiles/tavern-floor (1).png');
+    this.load.image('pillar', 'tavern/individual-walls/tavern-walls (65).png');
+    this.load.spritesheet('warrior', 'warrior/Idle.png', {
       frameWidth: 135,
       frameHeight: 135,
     })
-    this.load.spritesheet('goblin', 'assets/goblin/Idle.png', {
+    this.load.spritesheet('goblin', 'goblin/Idle.png', {
       frameWidth: 150,
       frameHeight: 150,
     })
-    this.load.spritesheet('arrow', 'assets/combat/Arrow.png', {
+    this.load.spritesheet('arrow', 'combat/Arrow.png', {
       frameWidth: 96,
       frameHeight: 96,
     })
-    this.load.spritesheet('archer', 'assets/archer/Idle.png', {
+    this.load.spritesheet('archer', 'archer/Idle.png', {
       frameWidth: 100,
       frameHeight: 100,
     })
-    this.load.spritesheet('wizard', 'assets/wizard/Idle.png', {
+    this.load.spritesheet('wizard', 'wizard/Idle.png', {
       frameWidth: 150,
       frameHeight: 150,
     })
-    this.load.image('archer-pallete', 'assets/archer/pallete.png')
+    this.load.spritesheet('small-fireball', 'fx/fireball/small-fireball.png', {
+      frameWidth: 64,
+      frameHeight: 64,
+    })
+    this.load.image('archer-pallete', 'archer/pallete.png')
   }
 
   create() {
@@ -82,6 +87,12 @@ export default class CombatScene extends Phaser.Scene {
       key: 'wizard-idle',
       frames: this.anims.generateFrameNames('wizard'),
       frameRate: 12,
+      repeat: -1,
+    })
+    this.anims.create({
+      key: 'fireball-idle',
+      frames: this.anims.generateFrameNames('small-fireball'),
+      frameRate: 60,
       repeat: -1,
     })
     createPallete(this, {
