@@ -1,7 +1,6 @@
-import { DOWN, RIGHT, UP } from "../../constants/directions-constants";
-import { createSpriteLeapAnimation, createSpriteMovementAnimation } from "../../utils";
 import CombatScene from "../../scenes/CombatScene";
-import { IsometricSprite } from "../IsometricSprite";
+import { createSpriteLeapAnimation } from "../../utils";
+import { Arrow } from "../projectiles/Arrow";
 import { Effect } from "./Effect";
 
 export type OnProjectileHitHander = (target: Phaser.Math.Vector2) => Effect[]
@@ -26,25 +25,11 @@ export class ArtilleryEffect extends Effect {
 
     const startPoint = this.origin.clone()
 
-    const spriteOffsetY = -8
-    const arrow = new IsometricSprite('arrow', {
+    const arrow = new Arrow({
       scene: this.scene,
       x: startPoint.x,
       y: startPoint.y,
-      offsetY: spriteOffsetY,
-      frame: 0,
-    })
-    arrow.setScale(1/4)
-    if (this.direction.equals(UP)) {
-      arrow.setAngle(60)
-    } else if (this.direction.equals(RIGHT)) {
-      arrow.setAngle(120)
-    } else if (this.direction.equals(DOWN)) {
-      arrow.setAngle(-120)
-    } else {
-      arrow.setAngle(-60)
-    }
-    this.scene.add.existing(arrow)
+    }, this.direction)
 
     const animation = createSpriteLeapAnimation(
       arrow,

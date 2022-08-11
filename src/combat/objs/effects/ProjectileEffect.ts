@@ -1,7 +1,6 @@
-import { DOWN, RIGHT, UP } from "../../constants/directions-constants";
-import { createSpriteMovementAnimation } from "../../utils";
 import CombatScene from "../../scenes/CombatScene";
-import { IsometricSprite } from "../IsometricSprite";
+import { createSpriteMovementAnimation } from "../../utils";
+import { Arrow } from "../projectiles/Arrow";
 import { Effect } from "./Effect";
 
 export type OnProjectileHitHander = (target: Phaser.Math.Vector2) => Effect[]
@@ -22,26 +21,13 @@ export class ProjectileEffect extends Effect {
       .add(this.direction)
     const tileOffset = this.getTileOffset(this.direction)
 
-    const spriteOffsetY = -8
-    const arrow = new IsometricSprite('arrow', {
+    const arrow = new Arrow({
       scene: this.scene,
       x: startPoint.x,
       y: startPoint.y,
       offsetX: tileOffset.x,
-      offsetY: tileOffset.y + spriteOffsetY,
-      frame: 0,
-    })
-    arrow.setScale(1/4)
-    if (this.direction.equals(UP)) {
-      arrow.setAngle(60)
-    } else if (this.direction.equals(RIGHT)) {
-      arrow.setAngle(120)
-    } else if (this.direction.equals(DOWN)) {
-      arrow.setAngle(-120)
-    } else {
-      arrow.setAngle(-60)
-    }
-    this.scene.add.existing(arrow)
+      offsetY: tileOffset.y,
+    }, this.direction)
 
     const animation = createSpriteMovementAnimation(
       arrow,
