@@ -5,7 +5,7 @@ import { PathFinding } from "./path-finding/PathFinding"
 import { PathNode } from "./path-finding/PathNode"
 import { Floor } from "./tiles/Floor"
 import { Tile } from "./tiles/Tile"
-import { ControllerType, Unit } from "./Unit"
+import { ControllerType, Unit } from "./units/Unit"
 
 export class Board extends Phaser.GameObjects.Group {
   declare scene: CombatScene

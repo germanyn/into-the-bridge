@@ -1,5 +1,5 @@
 import { GameObjects } from "phaser"
-import { Unit } from "../objs/Unit"
+import { Unit } from "../objs/units/Unit"
 import { Weapon } from "../objs/weapons/Weapon"
 import { UIScene } from "../scenes/UIScene"
 

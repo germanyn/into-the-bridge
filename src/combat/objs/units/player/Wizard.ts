@@ -1,5 +1,5 @@
 import { SpriteParams } from "../../IsometricSprite"
-import { Unit } from "../../Unit"
+import { Unit } from "../Unit"
 import { Fireball } from "../../weapons/artillery/Fireball"
 
 export const WIZARD_SPRITE = 'wizard'

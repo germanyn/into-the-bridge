@@ -6,7 +6,7 @@ import { IsometricSprite } from '../objs/IsometricSprite';
 import { OutlinePipeline } from '../objs/shaders/OutlinePipeline';
 import { Tile } from '../objs/tiles/Tile';
 import { Turn } from '../objs/Turn';
-import { Unit } from '../objs/Unit';
+import { Unit } from '../objs/units/Unit';
 import { Pillar } from '../objs/units/buildings/Pillar';
 import { Goblin } from '../objs/units/enemy/Goblin';
 import { Archer } from '../objs/units/player/Archer';

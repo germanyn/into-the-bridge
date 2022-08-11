@@ -1,5 +1,5 @@
 import { Floor } from "../objs/tiles/Floor";
-import { Unit } from "../objs/Unit";
+import { Unit } from "../objs/units/Unit";
 import { WeaponButton } from "../ui/WeaponButton";
 import { GAME_SCENE_KEY } from "./CombatScene";
 

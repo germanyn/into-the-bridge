@@ -1,5 +1,5 @@
 import { IsometricSprite } from "./objs/IsometricSprite";
-import { Unit } from "./objs/Unit";
+import { Unit } from "./objs/units/Unit";
 
 export function createSpriteMovementAnimation(
   sprite: Unit | IsometricSprite,

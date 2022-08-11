@@ -2,7 +2,7 @@ import { ALL_DIRECTIONS } from "../../constants/directions-constants";
 import CombatScene from "../../scenes/CombatScene";
 import { DirectDamageEffect } from "../effects/DirectDamageEffect";
 import { ProjectileEffect } from "../effects/ProjectileEffect";
-import { Unit } from "../Unit";
+import { Unit } from "../units/Unit";
 import { UnitAction } from "../UnitAction";
 
 export const SCORE_DAMAGE_ENEMY = 5

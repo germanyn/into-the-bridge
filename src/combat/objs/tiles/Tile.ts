@@ -1,6 +1,6 @@
 import CombatScene from "../../scenes/CombatScene";
 import { IsometricSprite } from "../IsometricSprite";
-import { Unit } from "../Unit";
+import { Unit } from "../units/Unit";
 
 export abstract class Tile extends IsometricSprite {
   unit?: Unit

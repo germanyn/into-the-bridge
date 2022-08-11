@@ -1,13 +1,13 @@
 import { GameObjects, Math } from "phaser"
-import { BOARD_SIZE } from "../constants/board-constants"
-import CombatScene from "../scenes/CombatScene"
-import { createSpriteLeapAnimation, createSpriteMovementAnimation } from "../utils"
-import { LifeBar } from "./displays/LifeBar"
-import { IsometricSprite, SpriteParams } from "./IsometricSprite"
-import { PathNode } from "./path-finding/PathNode"
-import { Tile } from "./tiles/Tile"
+import { BOARD_SIZE } from "../../constants/board-constants"
+import CombatScene from "../../scenes/CombatScene"
+import { createSpriteLeapAnimation, createSpriteMovementAnimation } from "../../utils"
+import { LifeBar } from "../displays/LifeBar"
+import { IsometricSprite, SpriteParams } from "../IsometricSprite"
+import { PathNode } from "../path-finding/PathNode"
+import { Tile } from "../tiles/Tile"
 import { UnitAction } from "./UnitAction"
-import { Weapon } from "./weapons/Weapon"
+import { Weapon } from "../weapons/Weapon"
 
 export type UnitParams = {
   baseLife?: number
