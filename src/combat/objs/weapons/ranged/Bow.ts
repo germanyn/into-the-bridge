@@ -30,8 +30,8 @@ export class Bow extends Weapon {
       const targetTile = this.scene.board.getTileAt(target)
       if (!targetTile) return []
       return [
-        new DirectDamageEffect(this.scene, targetTile, this.damage),
         new PushEffect(this.scene, targetTile, direction),
+        new DirectDamageEffect(this.scene, targetTile, this.damage),
       ]
     } 
     return [
