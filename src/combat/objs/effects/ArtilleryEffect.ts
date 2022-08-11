@@ -25,15 +25,13 @@ export class ArtilleryEffect extends Effect {
     if (!targetTile) return
 
     const startPoint = this.origin.clone()
-    const tileOffset = this.getTileOffset(this.direction)
 
     const spriteOffsetY = -8
     const arrow = new IsometricSprite('arrow', {
       scene: this.scene,
       x: startPoint.x,
       y: startPoint.y,
-      offsetX: tileOffset.x,
-      offsetY: tileOffset.y + spriteOffsetY,
+      offsetY: spriteOffsetY,
       frame: 0,
     })
     arrow.setScale(1/4)
@@ -70,11 +68,6 @@ export class ArtilleryEffect extends Effect {
       await effect.apply()
     }
     return
-  }
-
-  getTileOffset(direction: Phaser.Math.Vector2) {
-    return this.direction.clone()
-      .multiply({ x: -8, y: -4})
   }
 
   get projectilePath() {
