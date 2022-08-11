@@ -237,6 +237,7 @@ export abstract class Unit extends GameObjects.Container {
         duration: 250,
       })
     } else {
+      const currentDepth = this.tile.depth
       const halfTileDirection = new Math.Vector2({ x: newX, y: newY })
         .normalize()
         .multiply({ x: -8, y: -8 })
@@ -246,7 +247,7 @@ export abstract class Unit extends GameObjects.Container {
         x: newX + this.offsetX + halfTileDirection.x,
         y: newY + this.offsetY + halfTileDirection.y,
         onStart: () => {
-          if (!this.tile || toTile.depth < this.tile.depth ) return
+          if (!this.tile || toTile.depth < currentDepth ) return
           this.depth = toTile.depth + 1
         },
         duration: 200,
@@ -257,8 +258,8 @@ export abstract class Unit extends GameObjects.Container {
         y: oldPosition.y,
         duration: 125,
         onComplete: () => {
-          this.depth = toTile.depth + 1
-        }
+          this.depth = currentDepth
+        },
       })
     }
     return new Promise<void>(resolve => {
