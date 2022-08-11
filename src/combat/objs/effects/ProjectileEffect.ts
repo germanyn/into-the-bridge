@@ -1,6 +1,6 @@
 import CombatScene from "../../scenes/CombatScene";
 import { createSpriteMovementAnimation } from "../../utils";
-import { Arrow } from "../projectiles/Arrow";
+import { ProjectileDerivedClass } from "../projectiles/Projectile";
 import { Effect } from "./Effect";
 
 export type OnProjectileHitHander = (target: Phaser.Math.Vector2) => Effect[]
@@ -11,6 +11,7 @@ export class ProjectileEffect extends Effect {
     public origin: Phaser.Math.Vector2,
     public direction: Phaser.Math.Vector2,
     public onHit: OnProjectileHitHander,
+    public ProjectileClass: ProjectileDerivedClass,
   ) {
     super(scene)
   }
@@ -21,7 +22,7 @@ export class ProjectileEffect extends Effect {
       .add(this.direction)
     const tileOffset = this.getTileOffset(this.direction)
 
-    const arrow = new Arrow({
+    const arrow = new this.ProjectileClass({
       scene: this.scene,
       x: startPoint.x,
       y: startPoint.y,

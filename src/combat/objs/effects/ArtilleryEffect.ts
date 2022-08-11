@@ -1,6 +1,7 @@
 import CombatScene from "../../scenes/CombatScene";
 import { createSpriteLeapAnimation } from "../../utils";
 import { Arrow } from "../projectiles/Arrow";
+import { ProjectileDerivedClass } from "../projectiles/Projectile";
 import { Effect } from "./Effect";
 
 export type OnProjectileHitHander = (target: Phaser.Math.Vector2) => Effect[]
@@ -12,6 +13,7 @@ export class ArtilleryEffect extends Effect {
     public direction: Phaser.Math.Vector2,
     public distance: number,
     public onHit: OnProjectileHitHander,
+    public ProjectileClass: ProjectileDerivedClass,
   ) {
     super(scene)
   }
@@ -25,7 +27,7 @@ export class ArtilleryEffect extends Effect {
 
     const startPoint = this.origin.clone()
 
-    const arrow = new Arrow({
+    const arrow = new this.ProjectileClass({
       scene: this.scene,
       x: startPoint.x,
       y: startPoint.y,

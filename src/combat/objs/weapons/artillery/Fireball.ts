@@ -5,6 +5,7 @@ import { DirectDamageEffect } from "../../effects/DirectDamageEffect";
 import { Effect } from "../../effects/Effect";
 import { OnProjectileHitHander, ProjectileEffect } from "../../effects/ProjectileEffect";
 import { PushEffect } from "../../effects/PushEffect";
+import { Arrow } from "../../projectiles/Arrow";
 import { Tile } from "../../tiles/Tile";
 import { RangeType } from "../RangeType";
 import { Weapon } from "../Weapon";
@@ -62,6 +63,7 @@ export class Fireball extends Weapon {
         direction,
         distance,
         onHit,
+        Arrow,
       )
     ]
   }
