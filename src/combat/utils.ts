@@ -23,7 +23,7 @@ export function createSpriteMovementAnimation(
       x: newX + sprite.offsetX,
       y: newY + sprite.offsetY,
       onStart: () => {
-        if (newDepth > currentDepth) return
+        if (newDepth <= currentDepth) return
         sprite.depth = newDepth + 1
       },
       onComplete: () => {
@@ -31,7 +31,7 @@ export function createSpriteMovementAnimation(
       },
       duration,
     })
-    previousDepth = currentDepth
+    previousDepth = newDepth
   }
   return timeline
 }

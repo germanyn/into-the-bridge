@@ -66,6 +66,10 @@ export default class CombatScene extends Phaser.Scene {
       frameWidth: 64,
       frameHeight: 64,
     })
+    this.load.spritesheet('explosion', 'fx/explosion/explosion_2.png', {
+      frameWidth: 100,
+      frameHeight: 100,
+    })
     this.load.image('archer-pallete', 'archer/pallete.png')
   }
 
@@ -94,6 +98,11 @@ export default class CombatScene extends Phaser.Scene {
       frames: this.anims.generateFrameNames('small-fireball'),
       frameRate: 60,
       repeat: -1,
+    })
+    this.anims.create({
+      key: 'explosion-idle',
+      frames: this.anims.generateFrameNames('explosion'),
+      frameRate: 60,
     })
     createPallete(this, {
       paletteKey: 'archer-pallete',

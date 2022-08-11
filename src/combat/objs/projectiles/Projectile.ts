@@ -7,6 +7,7 @@ export interface Projectile {
 }
 
 export abstract class Projectile extends IsometricSprite {
+  hitAnimation?: string
   angleOffset = 0
   direction = RIGHT
   setDirection(direction: Phaser.Math.Vector2) {

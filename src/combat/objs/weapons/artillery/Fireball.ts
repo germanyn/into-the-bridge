@@ -5,6 +5,7 @@ import { DirectDamageEffect } from "../../effects/DirectDamageEffect";
 import { Effect } from "../../effects/Effect";
 import { OnProjectileHitHander, ProjectileEffect } from "../../effects/ProjectileEffect";
 import { PushEffect } from "../../effects/PushEffect";
+import { IsometricSprite } from "../../IsometricSprite";
 import { SmallFireball } from "../../projectiles/SmallFireball";
 import { Tile } from "../../tiles/Tile";
 import { RangeType } from "../RangeType";
@@ -52,10 +53,22 @@ export class Fireball extends Weapon {
       }
 
       return [
-        new DirectDamageEffect(this.scene, targetTile, this.damage),
+        new DirectDamageEffect(
+          this.scene,
+          targetTile,
+          this.damage,
+          (tile) => {
+            return new IsometricSprite('', {
+              scene: this.scene,
+              x: tile.gridX,
+              y: tile.gridY,
+              offsetY: -32,
+            }).play('explosion-idle')
+          },
+        ),
         ...adjacentEffects,
       ]
-    } 
+    }
     return [
       new ArtilleryEffect(
         this.scene,
