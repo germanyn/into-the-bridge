@@ -1,16 +1,15 @@
-import { SpriteParams, UnitParams } from "../../IsometricSprite"
+import { SpriteParams } from "../../IsometricSprite"
 import { Unit } from "../Unit"
 
-export const PILLAR_SPRITE = 'pillar'
-
-export type PillarParams = UnitParams
+export const PILLAR_SPRITE = 'walls'
 
 export class Pillar extends Unit {
   constructor(params: SpriteParams) {
     super(PILLAR_SPRITE, {
       ...params,
-      y: params.y, 
+      y: params.y,
       offsetY: -24,
+      frame: 70,
     }, {
       baseLife: 2,
     })

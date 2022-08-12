@@ -1,5 +1,5 @@
 import CombatScene from "../../scenes/CombatScene";
-import { IsometricSprite } from "../IsometricSprite";
+import { IsometricSprite, SpriteParams } from "../IsometricSprite";
 import { Unit } from "../units/Unit";
 
 export abstract class Tile extends IsometricSprite {
@@ -7,12 +7,8 @@ export abstract class Tile extends IsometricSprite {
   canHaveUnit = true
   abstract name: string
   abstract description: string
-  constructor(texture: string, scene: CombatScene, x: number, y: number) {
-    super(texture, {
-      scene,
-      x,
-      y,
-    })
+  constructor(texture: string, spriteParams: SpriteParams) {
+    super(texture, spriteParams)
     this.on(Phaser.Input.Events.POINTER_DOWN, () => {
       this.scene.events.emit('select-tile', this)
     })

@@ -40,35 +40,34 @@ export default class CombatScene extends Phaser.Scene {
 
   preload() {
     this.load.setPath('assets')
-    this.load.image('floor', 'tavern/individual-floor-tiles/tavern-floor (1).png');
-    this.load.image('pillar', 'tavern/individual-walls/tavern-walls (65).png');
+    this.load.spritesheet('floor', 'tavern/tavern-floor.png', {
+      frameWidth: 32,
+      frameHeight: 16,
+    });
+    this.load.spritesheet('walls', 'tavern/tavern-walls.png', {
+      frameWidth: 32,
+      frameHeight: 64,
+    });
     this.load.spritesheet('warrior', 'warrior/Idle.png', {
       frameWidth: 135,
-      frameHeight: 135,
     })
     this.load.spritesheet('goblin', 'goblin/Idle.png', {
       frameWidth: 150,
-      frameHeight: 150,
     })
     this.load.spritesheet('arrow', 'combat/Arrow.png', {
       frameWidth: 96,
-      frameHeight: 96,
     })
     this.load.spritesheet('archer', 'archer/Idle.png', {
       frameWidth: 100,
-      frameHeight: 100,
     })
     this.load.spritesheet('wizard', 'wizard/Idle.png', {
       frameWidth: 150,
-      frameHeight: 150,
     })
     this.load.spritesheet('small-fireball', 'fx/fireball/small-fireball.png', {
       frameWidth: 64,
-      frameHeight: 64,
     })
     this.load.spritesheet('explosion', 'fx/explosion/explosion_2.png', {
       frameWidth: 100,
-      frameHeight: 100,
     })
     this.load.spritesheet('airpush_D', 'fx/push/airpush_D.png', {
       frameWidth: 40,
