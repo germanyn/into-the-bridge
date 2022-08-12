@@ -70,6 +70,22 @@ export default class CombatScene extends Phaser.Scene {
       frameWidth: 100,
       frameHeight: 100,
     })
+    this.load.spritesheet('airpush_D', 'fx/push/airpush_D.png', {
+      frameWidth: 40,
+      frameHeight: 32,
+    })
+    this.load.spritesheet('airpush_L', 'fx/push/airpush_L.png', {
+      frameWidth: 40,
+      frameHeight: 32,
+    })
+    this.load.spritesheet('airpush_R', 'fx/push/airpush_R.png', {
+      frameWidth: 40,
+      frameHeight: 32,
+    })
+    this.load.spritesheet('airpush_U', 'fx/push/airpush_U.png', {
+      frameWidth: 40,
+      frameHeight: 32,
+    })
     this.load.image('archer-pallete', 'archer/pallete.png')
   }
 
@@ -103,6 +119,26 @@ export default class CombatScene extends Phaser.Scene {
       key: 'explosion-idle',
       frames: this.anims.generateFrameNames('explosion'),
       frameRate: 60,
+    })
+    this.anims.create({
+      key: 'airpush_D-idle',
+      frames: this.anims.generateFrameNames('airpush_D'),
+      frameRate: 20,
+    })
+    this.anims.create({
+      key: 'airpush_L-idle',
+      frames: this.anims.generateFrameNames('airpush_L'),
+      frameRate: 20,
+    })
+    this.anims.create({
+      key: 'airpush_R-idle',
+      frames: this.anims.generateFrameNames('airpush_R'),
+      frameRate: 20,
+    })
+    this.anims.create({
+      key: 'airpush_U-idle',
+      frames: this.anims.generateFrameNames('airpush_U'),
+      frameRate: 20,
     })
     createPallete(this, {
       paletteKey: 'archer-pallete',

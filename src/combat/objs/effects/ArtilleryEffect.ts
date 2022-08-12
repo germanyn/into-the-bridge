@@ -52,7 +52,7 @@ export class ArtilleryEffect extends Effect {
 
     const onHitEffects = this.onHit(targetTile.point)
     for (const effect of onHitEffects) {
-      await effect.apply()
+      effect.apply()
     }
     return
   }

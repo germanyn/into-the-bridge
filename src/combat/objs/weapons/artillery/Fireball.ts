@@ -1,4 +1,4 @@
-import { ALL_DIRECTIONS } from "../../../constants/directions-constants";
+import { ALL_DIRECTIONS, DOWN, LEFT, RIGHT, UP } from "../../../constants/directions-constants";
 import CombatScene from "../../../scenes/CombatScene";
 import { ArtilleryEffect } from "../../effects/ArtilleryEffect";
 import { DirectDamageEffect } from "../../effects/DirectDamageEffect";
@@ -43,11 +43,28 @@ export class Fireball extends Weapon {
         const tile = this.scene.board.getTileAt(adjacentPoint)
         if (!tile)  continue
 
+        
+        const buildAnimation = (tile: Tile) => {
+          const animationKey = this.getPushAnimationKey(direction)
+          const sprite = new IsometricSprite('', {
+            scene: this.scene,
+            x: tile.gridX,
+            y: tile.gridY,
+          })
+            .play(animationKey)
+          sprite.depth = 4000
+          sprite.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
+            sprite.destroy()
+          })
+          return sprite
+        }
+
         adjacentEffects.push(
           new PushEffect(
             this.scene,
             tile,
             direction,
+            buildAnimation,
           )
         )
       }
@@ -58,12 +75,16 @@ export class Fireball extends Weapon {
           targetTile,
           this.damage,
           (tile) => {
-            return new IsometricSprite('', {
+            const sprite = new IsometricSprite('', {
               scene: this.scene,
               x: tile.gridX,
               y: tile.gridY,
               offsetY: -32,
             }).play('explosion-idle')
+            sprite.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
+              sprite.destroy()
+            })
+            return sprite
           },
         ),
         ...adjacentEffects,
@@ -79,6 +100,19 @@ export class Fireball extends Weapon {
         SmallFireball,
       )
     ]
+  }
+
+  getPushAnimationKey(direction: Phaser.Math.Vector2) {
+    if (direction.equals(UP)) {
+      return 'airpush_U-idle'
+    } else if (direction.equals(RIGHT)) {
+      return 'airpush_R-idle'
+    } else if (direction.equals(LEFT)) {
+      return 'airpush_L-idle'
+    } else if (direction.equals(DOWN)) {
+      return 'airpush_D-idle'
+    }
+    throw new Error('No animation for push direction')
   }
 
 }
