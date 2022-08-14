@@ -52,7 +52,7 @@ export class Fireball extends Weapon {
             y: tile.gridY,
           })
             .play(animationKey)
-          sprite.depth = 4000
+          sprite.depth = sprite.depth + 100
           sprite.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
             sprite.destroy()
           })
@@ -81,6 +81,7 @@ export class Fireball extends Weapon {
               y: tile.gridY,
               offsetY: -32,
             }).play('explosion-idle')
+            sprite.depth = sprite.depth + 100
             sprite.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
               sprite.destroy()
             })
