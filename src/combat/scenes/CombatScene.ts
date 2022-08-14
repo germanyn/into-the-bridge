@@ -93,7 +93,6 @@ export default class CombatScene extends Phaser.Scene {
   }
 
   create() {
-    console.log('passei aqui')
     this.anims.create({
       key: 'goblin-idle',
       frames: this.anims.generateFrameNames('goblin'),
