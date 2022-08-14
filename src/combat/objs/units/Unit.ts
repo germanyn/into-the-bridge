@@ -24,7 +24,7 @@ export abstract class Unit extends GameObjects.Container {
   private controller: ControllerType = 'none'
   movedThisTurn = false
   attackedThisTurn = false
-  life: number = 0
+  #life: number = 0
   canBePushed = true
   weapons: Weapon[] = []
   sprite: IsometricSprite
@@ -42,6 +42,13 @@ export abstract class Unit extends GameObjects.Container {
     super(spriteParams.scene)
     this.baseLife = baseLife
     this.baseMovement = baseMovement
+    this.lifeBar = new LifeBar({
+      scene: this.scene,
+      x: 0,
+      y: -24,
+      current: this.life,
+      max: this.baseLife,
+    })
     this.life = baseLife
     this.sprite = new IsometricSprite(textureName, spriteParams)
     this.x = this.sprite.x
@@ -51,13 +58,6 @@ export abstract class Unit extends GameObjects.Container {
     this.add(this.sprite)
     this.scene.add.existing(this)
     this.depth = this.sprite.depth
-    this.lifeBar = new LifeBar({
-      scene: this.scene,
-      x: 0,
-      y: -24,
-      current: this.life,
-      max: this.baseLife,
-    })
     this.add(this.lifeBar)
     this.setController(controller)
   }
@@ -121,7 +121,6 @@ export abstract class Unit extends GameObjects.Container {
       return this.scene.board.getPathTile(path) === tile
     })
     if (!path) return false
-    const [firstNode, ...otherNodes] = path
     const vector2Path = path.slice(1)
       .map(node => new Math.Vector2(node.x, node.y))
     const timeline = !this.leaps
@@ -191,13 +190,10 @@ export abstract class Unit extends GameObjects.Container {
   }
 
   async hurt(damage: number) {
-    this.life = damage >= this.life
-      ? 0
-      : this.life - damage
-    this.lifeBar.current = this.life
-    this.lifeBar.draw()
-    if (!this.life) await this.die()
+    this.life = this.life - damage
+    if (this.life === 0) return this.die()
   }
+
   async die() {
     return new Promise<void>(resolve => {
       this.scene.board.removeUnit(this)
@@ -215,6 +211,19 @@ export abstract class Unit extends GameObjects.Container {
       })
     })
   }
+
+  set life(life: number) {
+    this.#life = life <= 0
+      ? 0
+      : life
+    this.lifeBar.current = this.life
+    this.lifeBar.draw()
+  }
+
+  get life() {
+    return this.#life
+  }
+
   async push(direction: Phaser.Math.Vector2) {
     if (!this.tile) return
     if (!this.canBePushed) return
@@ -232,7 +241,7 @@ export abstract class Unit extends GameObjects.Container {
         y: newY + this.offsetY,
         onStart: () => {
           if (!this.tile || toTile.depth < this.tile.depth ) return
-          this.depth = toTile.depth + 1
+          this.depth = toTile.depth + 0.5
         },
         duration: 250,
       })
@@ -248,7 +257,7 @@ export abstract class Unit extends GameObjects.Container {
         y: newY + this.offsetY + halfTileDirection.y,
         onStart: () => {
           if (!this.tile || toTile.depth < currentDepth ) return
-          this.depth = toTile.depth + 1
+          this.depth = toTile.depth + 0.5
         },
         duration: 200,
       })
@@ -262,7 +271,7 @@ export abstract class Unit extends GameObjects.Container {
         },
       })
     }
-    return new Promise<void>(resolve => {
+    await new Promise<void>(resolve => {
       timeline.once(Phaser.Tweens.Events.TIMELINE_COMPLETE, async () => {
         if (toTile.unit) {
           await Promise.all([

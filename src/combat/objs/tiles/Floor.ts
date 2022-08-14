@@ -15,7 +15,7 @@ export class Floor extends Tile {
       scene,
       x,
       y,
-      frame: randomIntFromInterval(0, sheet.frameTotal - 1),
+      frame: randomIntFromInterval(0, sheet.frameTotal - 2),
     })
   }
 }

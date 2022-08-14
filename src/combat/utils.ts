@@ -24,10 +24,10 @@ export function createSpriteMovementAnimation(
       y: newY + sprite.offsetY,
       onStart: () => {
         if (newDepth <= currentDepth) return
-        sprite.depth = newDepth + 1
+        sprite.depth = newDepth + 0.5
       },
       onComplete: () => {
-        sprite.depth = newDepth + 1
+        sprite.depth = newDepth + 0.5
       },
       duration,
     })
@@ -70,10 +70,10 @@ export function createSpriteLeapAnimation(
     },
     onStart: () => {
       if (newDepth < previousDepth) return
-      sprite.depth = newDepth + 1
+      sprite.depth = newDepth + 0.5
     },
     onComplete: () => {
-      sprite.depth = newDepth + 1
+      sprite.depth = newDepth + 0.5
     },
     duration,
   })

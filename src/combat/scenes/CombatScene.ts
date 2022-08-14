@@ -44,6 +44,10 @@ export default class CombatScene extends Phaser.Scene {
       frameWidth: 32,
       frameHeight: 16,
     });
+    this.load.spritesheet('pit', 'tavern/pit.png', {
+      frameWidth: 32,
+      frameHeight: 16,
+    });
     this.load.spritesheet('walls', 'tavern/tavern-walls.png', {
       frameWidth: 32,
       frameHeight: 64,
@@ -217,7 +221,7 @@ export default class CombatScene extends Phaser.Scene {
       }),
       new Goblin({
         scene: this,
-        x: 7,
+        x: 6,
         y: 4,
       }),
       new Pillar({
@@ -275,10 +279,10 @@ export default class CombatScene extends Phaser.Scene {
         y: newY + sprite.offsetY,
         onStart: () => {
           if (newDepth > currentDepth ) return
-          sprite.depth = newDepth + 1
+          sprite.depth = newDepth + 0.5
         },
         onComplete: () => {
-          sprite.depth = newDepth + 1
+          sprite.depth = newDepth + 0.5
         },
         duration,
       })

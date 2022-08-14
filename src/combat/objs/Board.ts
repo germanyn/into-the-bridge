@@ -4,6 +4,7 @@ import CombatScene from "../scenes/CombatScene"
 import { PathFinding } from "./path-finding/PathFinding"
 import { PathNode } from "./path-finding/PathNode"
 import { Floor } from "./tiles/Floor"
+import { Pit } from "./tiles/Pit"
 import { Tile } from "./tiles/Tile"
 import { ControllerType, Unit } from "./units/Unit"
 
@@ -16,6 +17,12 @@ export class Board extends Phaser.GameObjects.Group {
     super(scene)
     this.tiles = Array.from(Array(BOARD_SIZE), (_, x) => {
       return Array.from(Array(BOARD_SIZE), (_, y) => {
+        if (x === 4 && y === 5) {
+          const tile = new Pit(scene, x, y)
+          tile.setInteractive()
+          this.add(tile)
+          return tile
+        }
         const tile = new Floor(scene, x, y)
         tile.setInteractive()
         this.add(tile)
