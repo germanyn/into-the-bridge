@@ -9,11 +9,10 @@ export class Pillar extends Unit {
       ...params,
       y: params.y,
       offsetY: -24,
-      frame: 70,
+      frame: 73,
     }, {
       baseLife: 2,
     })
-    this.alpha = 0.80
     this.name = 'Pillar'
     this.canBePushed = false
   }
