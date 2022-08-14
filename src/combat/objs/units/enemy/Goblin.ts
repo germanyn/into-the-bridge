@@ -24,7 +24,7 @@ export class Goblin extends Unit {
     this.weapons = [
       new Punch(this.scene),
     ]
-    this.scale = 0.6
+    this.sprite.scale = 0.6
     this.name = 'Goblin'
     this.sprite.flipX = true
     this.sprite.anims.play('goblin-idle')

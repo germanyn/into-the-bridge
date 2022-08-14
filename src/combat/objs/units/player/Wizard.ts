@@ -22,7 +22,7 @@ export class Wizard extends Unit {
         controller: 'player',
       },
     )
-    this.scale = 0.75
+    this.sprite.scale = 0.75
     this.weapons = [
       new Fireball(this.scene),
     ]

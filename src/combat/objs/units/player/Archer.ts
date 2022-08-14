@@ -25,7 +25,7 @@ export class Archer extends Unit {
         controller: 'player',
       },
     )
-    this.scale = 0.75
+    this.sprite.scale = 0.75
     this.weapons = [
       new Bow(this.scene),
     ]
